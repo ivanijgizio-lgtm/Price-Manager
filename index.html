@@ -74,6 +74,18 @@
 
     .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
 
+    /* Gantt */
+    .gantt-wrap{display:grid;grid-template-columns:260px 1fr;gap:12px;}
+    .gantt-left{background:var(--surface-2);border-radius:12px;padding:10px;border:1px solid var(--border);}
+    .gantt-right{background:var(--surface-2);border-radius:12px;padding:10px;border:1px solid var(--border);overflow:auto;}
+    .gantt-row{display:grid;grid-template-columns:260px 1fr;gap:12px;margin-bottom:10px;}
+    .gantt-task{padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:8px;}
+    .gantt-timeline{position:relative;height:40px;border-radius:10px;background:var(--surface);border:1px solid var(--border);}
+    .gantt-bar{position:absolute;height:22px;border-radius:8px;top:8px;box-shadow:var(--shadow-soft);}
+    .months{display:grid;grid-template-columns:repeat(12,1fr);font-size:11px;color:var(--muted);margin-bottom:6px;}
+    .month-cell{border-right:1px dashed var(--border);padding:2px 4px;text-align:center;}
+
+    /* Messenger */
     .chat-shell{display:grid;grid-template-columns:280px 1fr;height:560px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid var(--border);}
     .chat-sidebar{background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;}
     .chat-sidebar .head{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
@@ -100,11 +112,13 @@
       .menu-item{white-space:nowrap;border-left:none;border-bottom:3px solid transparent;}
       .menu-item.active{border-bottom-color:var(--primary);}
       .chat-shell{grid-template-columns:1fr;}
+      .gantt-wrap{grid-template-columns:1fr;}
     }
     @media (max-width: 600px){.kpi-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body class="theme-ocean">
+
 <div id="loginPage" class="login-page">
   <div class="login-box">
     <h1>Price Manager Pro</h1>
@@ -143,6 +157,7 @@
 
       <div class="menu-group">Операции</div>
       <div class="menu-item" data-section="logistics"><i class="ph ph-truck"></i> Логистика</div>
+      <div class="menu-item" data-section="gantt"><i class="ph ph-chart-bar"></i> Gantt</div>
       <div class="menu-item" data-section="upload"><i class="ph ph-upload"></i> Загрузка</div>
       <div class="menu-item" data-section="assistant"><i class="ph ph-robot"></i> AI</div>
       <div class="menu-item" data-section="insights"><i class="ph ph-lightbulb"></i> Insights</div>
@@ -152,6 +167,7 @@
     </div>
 
     <div class="content">
+      <!-- DASHBOARD -->
       <section id="dashboard" class="section active">
         <div class="kpi-grid">
           <div class="kpi accent"><div class="kpi-label">Всего продуктов</div><div class="kpi-value" id="kpiProducts">0</div></div>
@@ -159,6 +175,7 @@
           <div class="kpi"><div class="kpi-label">Средняя цена</div><div class="kpi-value" id="kpiAvg">—</div></div>
           <div class="kpi"><div class="kpi-label">Лучшая компания</div><div class="kpi-value" id="kpiBest">—</div></div>
         </div>
+
         <div class="card">
           <div class="card-title"><i class="ph ph-bolt"></i> Быстрые действия</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -167,8 +184,9 @@
             <button class="btn btn-primary" onclick="document.querySelector('[data-section=messenger]').click()"><i class="ph ph-chat-circle-text"></i> Чат логистики</button>
           </div>
         </div>
+
         <div class="card">
-          <div class="card-title"><i class="ph ph-star"></i> Лучшие цены (Top 10)</div>
+          <div class="card-title"><i class="ph ph-star"></i> Лучшие цены по продуктам (Top 10)</div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Product</th><th>Компания</th><th>Цена</th><th>Медиана</th><th>Target</th><th>Статус</th></tr></thead>
@@ -178,14 +196,16 @@
         </div>
       </section>
 
+      <!-- SEARCH -->
       <section id="search" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-magnifying-glass"></i> Поиск</div>
-          <input id="searchInput" placeholder="Название продукта или компании"/>
+          <input id="searchInput" placeholder="Введите продукт или компанию (например: HIV или Boson)"/>
           <div id="searchResults" style="margin-top:16px;"></div>
         </div>
       </section>
 
+      <!-- COMPARE -->
       <section id="compare" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-scales"></i> Сравнение</div>
@@ -197,6 +217,7 @@
         </div>
       </section>
 
+      <!-- MATRIX -->
       <section id="matrix" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-table"></i> Матрица</div>
@@ -204,6 +225,7 @@
         </div>
       </section>
 
+      <!-- ANALYTICS -->
       <section id="analytics" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-graph"></i> Аналитика</div>
@@ -217,6 +239,32 @@
         </div>
       </section>
 
+      <!-- GANTT -->
+      <section id="gantt" class="section">
+        <div class="card">
+          <div class="card-title"><i class="ph ph-chart-bar"></i> Gantt Chart (проекты)</div>
+          <div class="filters">
+            <select id="ganttProjectSelect"></select>
+            <select id="ganttYearSelect"></select>
+            <button class="btn btn-primary" id="ganttAddProject"><i class="ph ph-plus"></i> Проект</button>
+          </div>
+
+          <div class="card" style="margin-top:12px;">
+            <div class="card-title">➕ Добавить задачу</div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+              <input id="ganttTaskName" placeholder="Задача"/>
+              <input id="ganttTaskStart" type="date"/>
+              <input id="ganttTaskEnd" type="date"/>
+              <input id="ganttTaskColor" type="color" value="#2f5cff"/>
+              <button class="btn btn-primary" id="ganttAddTask"><i class="ph ph-plus"></i> Добавить</button>
+            </div>
+          </div>
+
+          <div id="ganttContainer" style="margin-top:12px;"></div>
+        </div>
+      </section>
+
+      <!-- AI -->
       <section id="assistant" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-robot"></i> AI помощник</div>
@@ -228,6 +276,7 @@
         </div>
       </section>
 
+      <!-- LOGISTICS -->
       <section id="logistics" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-truck"></i> Логистика</div>
@@ -235,6 +284,12 @@
             <button class="btn btn-primary" id="addLogisticsBtn"><i class="ph ph-plus"></i> Добавить</button>
             <button class="btn btn-danger" id="clearLogisticsBtn"><i class="ph ph-trash"></i> Очистить</button>
           </div>
+
+          <div class="filters" style="margin-top:12px;">
+            <select id="logisticsYear"></select>
+            <select id="logisticsMonth"></select>
+          </div>
+
           <div class="table-wrap" style="margin-top:12px;">
             <table>
               <thead><tr><th>№</th><th>Поставщик</th><th>Артикул</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Статус</th><th>План</th><th>Факт</th><th>Стоимость</th><th></th></tr></thead>
@@ -244,13 +299,21 @@
         </div>
       </section>
 
+      <!-- UPLOAD -->
       <section id="upload" class="section">
-        <div class="card"><div class="card-title"><i class="ph ph-upload"></i> Загрузка прайса</div><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card">
+          <div class="card-title"><i class="ph ph-upload"></i> Загрузка прайса</div>
+          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/>
+          <label style="display:block;margin-top:10px;">
+            <input type="checkbox" id="tcaOnly" checked> Загружать только TCA (если в файле есть другие продукты)
+          </label>
+        </div>
         <div class="card"><div class="card-title"><i class="ph ph-target"></i> Target Price</div><input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/></div>
         <div class="card"><div class="card-title"><i class="ph ph-truck"></i> Загрузка логистики</div><input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/></div>
         <div class="card"><button class="btn btn-danger" id="clearAllBtn"><i class="ph ph-trash"></i> Очистить все</button></div>
       </section>
 
+      <!-- INSIGHTS -->
       <section id="insights" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-lightbulb"></i> AI Insights</div>
@@ -258,6 +321,7 @@
         </div>
       </section>
 
+      <!-- MESSENGER -->
       <section id="messenger" class="section">
         <div class="card">
           <div class="card-title"><i class="ph ph-chat-circle-text"></i> SENDER — единый центр коммуникаций</div>
@@ -427,6 +491,15 @@ document.addEventListener('DOMContentLoaded', () => {
     constructor(){
       this.DB = StorageService.get('priceManagerDB', {companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]});
       this.currentUser = StorageService.get('currentUserPM', null);
+
+      this.gantt = StorageService.get('ganttData', {
+        projects:['Проект 1'],
+        tasks:[
+          {id:1, project:'Проект 1', name:'Анализ рынка', start:'2025-01-10', end:'2025-02-20', color:'#2f5cff'},
+          {id:2, project:'Проект 1', name:'Закупка', start:'2025-03-01', end:'2025-04-15', color:'#22c55e'}
+        ]
+      });
+
       this.init();
     }
     init(){
@@ -435,7 +508,10 @@ document.addEventListener('DOMContentLoaded', () => {
       new ThemeManager(this.themeSelect);
       this.messenger=new MessengerApp(); this.messenger.init();
       this.updateAll();
+      this.initGantt();
+      this.initLogisticsFilters();
     }
+
     cache(){
       this.loginPage=document.getElementById('loginPage');
       this.mainApp=document.getElementById('mainApp');
@@ -450,6 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.targetPriceFile=document.getElementById('targetPriceFile');
       this.logisticsFile=document.getElementById('logisticsFile');
       this.clearAllBtn=document.getElementById('clearAllBtn');
+      this.tcaOnly=document.getElementById('tcaOnly');
 
       this.searchInput=document.getElementById('searchInput');
       this.searchResults=document.getElementById('searchResults');
@@ -460,6 +537,8 @@ document.addEventListener('DOMContentLoaded', () => {
       this.addLogisticsBtn=document.getElementById('addLogisticsBtn');
       this.clearLogisticsBtn=document.getElementById('clearLogisticsBtn');
       this.logisticsBody=document.getElementById('logisticsBody');
+      this.logisticsYear=document.getElementById('logisticsYear');
+      this.logisticsMonth=document.getElementById('logisticsMonth');
 
       this.topPricesList=document.getElementById('topPricesList');
       this.analyticsTable=document.getElementById('analyticsTable');
@@ -474,7 +553,19 @@ document.addEventListener('DOMContentLoaded', () => {
       this.kpiAvg=document.getElementById('kpiAvg');
       this.kpiBest=document.getElementById('kpiBest');
       this.analyticsFilter=document.getElementById('analyticsFilter');
+
+      // Gantt
+      this.ganttProjectSelect=document.getElementById('ganttProjectSelect');
+      this.ganttYearSelect=document.getElementById('ganttYearSelect');
+      this.ganttAddProject=document.getElementById('ganttAddProject');
+      this.ganttAddTask=document.getElementById('ganttAddTask');
+      this.ganttTaskName=document.getElementById('ganttTaskName');
+      this.ganttTaskStart=document.getElementById('ganttTaskStart');
+      this.ganttTaskEnd=document.getElementById('ganttTaskEnd');
+      this.ganttTaskColor=document.getElementById('ganttTaskColor');
+      this.ganttContainer=document.getElementById('ganttContainer');
     }
+
     bind(){
       this.loginBtn.onclick=()=>this.handleLogin();
       this.logoutBtn.onclick=()=>this.handleLogout();
@@ -505,6 +596,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if(btn) this.deleteLogisticsRow(Number(btn.dataset.delete));
       });
 
+      this.logisticsYear.onchange=()=>this.updateLogisticsTable();
+      this.logisticsMonth.onchange=()=>this.updateLogisticsTable();
+
       document.querySelectorAll('.menu-item').forEach(item=>{
         item.addEventListener('click',()=>{
           document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
@@ -513,15 +607,13 @@ document.addEventListener('DOMContentLoaded', () => {
           document.getElementById(item.dataset.section).classList.add('active');
         });
       });
-
-      document.addEventListener('keydown',(e)=>{
-        if(e.ctrlKey && e.key.toLowerCase()==='k'){e.preventDefault();document.querySelector('[data-section=search]').click();this.searchInput.focus();}
-        if(e.ctrlKey && e.key.toLowerCase()==='m'){e.preventDefault();document.querySelector('[data-section=messenger]').click();}
-      });
     }
+
     save(){StorageService.set('priceManagerDB', this.DB);}
+
     showLogin(){this.loginPage.style.display='flex'; this.mainApp.classList.remove('active');}
     showMain(){this.loginPage.style.display='none'; this.mainApp.classList.add('active'); if(this.currentUser) this.userName.textContent=this.currentUser.name;}
+
     handleLogin(){
       const email=this.loginEmail.value.trim();
       const pass=this.loginPassword.value.trim();
@@ -532,6 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }else alert('Неверный логин. Email: admin@example.com | Пароль: admin123');
     }
     handleLogout(){StorageService.remove('currentUserPM'); this.currentUser=null; this.showLogin();}
+
     parsePrice(val){
       if(val===null||val===undefined) return null;
       let s=String(val).trim();
@@ -539,7 +632,9 @@ document.addEventListener('DOMContentLoaded', () => {
       s=s.replace(',', '.').replace(/[^\d.]/g,'');
       const p=parseFloat(s); return isNaN(p)?null:p;
     }
+
     updateAll(){this.updateDashboard(); this.initializeSelects(); this.updateMatrix(); this.updateAnalytics(); this.updateLogisticsTable();}
+
     updateKPI(){
       this.kpiProducts.textContent=this.DB.products.length;
       this.kpiCompanies.textContent=this.DB.companies.length;
@@ -560,6 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.kpiBest.textContent=best;
       }
     }
+
     handlePriceUpload(e){
       const file=e.target.files[0]; if(!file) return;
       const reader=new FileReader();
@@ -568,15 +664,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const wb=XLSX.read(data,{type:'array'});
         const sheet=wb.Sheets[wb.SheetNames[0]];
         const json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
+
         const headersRaw=json[0].slice(2);
         const headers=headersRaw.filter(h=>h && !String(h).toLowerCase().includes('медиана') && !String(h).toLowerCase().includes('target'));
         this.DB.companies=headers.map((h,i)=>({id:i+1,name:String(h).trim()}));
+
         this.DB.prices={}; this.DB.products=[]; this.DB.productNames={}; this.DB.medians={};
 
         for(let i=1;i<json.length;i++){
-          const row=json[i]; if(!row||!row[1]) continue;
-          const pid=row[0]?.toString().trim()||String(i);
+          const row=json[i];
+          if(!row||!row[1]) continue;
+
           const pname=String(row[1]).trim();
+          if(!pname || pname.toLowerCase().includes('product name')) continue;
+
+          // TCA only filter
+          if(this.tcaOnly.checked && !pname.toLowerCase().includes('tca')) continue;
+
+          const pid=row[0]?.toString().trim()||String(i);
           this.DB.products.push(pid);
           this.DB.productNames[pid]=pname;
           this.DB.prices[pid]={};
@@ -598,6 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       reader.readAsArrayBuffer(file);
     }
+
     handleTargetUpload(e){
       const file=e.target.files[0]; if(!file) return;
       const reader=new FileReader();
@@ -620,6 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       reader.readAsArrayBuffer(file);
     }
+
     handleLogisticsUpload(e){
       const file=e.target.files[0]; if(!file) return;
       const reader=new FileReader();
@@ -639,20 +746,25 @@ document.addEventListener('DOMContentLoaded', () => {
           let status='📋 В ожидании'; if(factDate) status='✅ Доставлена'; else if(planDate) status='🚚 В пути';
           result.push({id:Date.now()+i,num:num||'',supplier:supplier||'',article:article||'',name:name||'',quantity:qty||'',unit:unit||'шт.',status,planDate,factDate,cost});
         }
-        this.DB.logistics=result; this.save(); this.updateLogisticsTable(); alert('✅ Логистика загружена');
+        this.DB.logistics=result; this.save(); this.initLogisticsFilters(); this.updateLogisticsTable(); alert('✅ Логистика загружена');
       };
       reader.readAsArrayBuffer(file);
     }
+
     updateDashboard(){
       this.topPricesList.innerHTML='';
-      const all=[];
-      Object.keys(this.DB.prices).forEach(pid=>{
-        Object.entries(this.DB.prices[pid]).forEach(([company,price])=>{
-          all.push({pid,company,price,median:this.DB.medians[pid],target:this.DB.targetPrices[pid],name:this.DB.productNames[pid]});
+      const bestByProduct=[];
+      this.DB.products.forEach(pid=>{
+        let bestPrice=Infinity, bestCompany='';
+        Object.entries(this.DB.prices[pid]||{}).forEach(([comp,price])=>{
+          if(price<bestPrice){bestPrice=price; bestCompany=comp;}
         });
+        if(bestPrice<Infinity){
+          bestByProduct.push({pid,company:bestCompany,price:bestPrice,median:this.DB.medians[pid],target:this.DB.targetPrices[pid],name:this.DB.productNames[pid]});
+        }
       });
-      all.sort((a,b)=>a.price-b.price);
-      all.slice(0,10).forEach(i=>{
+      bestByProduct.sort((a,b)=>a.price-b.price);
+      bestByProduct.slice(0,10).forEach(i=>{
         const status=i.target?(i.price<=i.target?'✅ OK':'❌ High'):'⚪';
         const tr=document.createElement('tr');
         tr.innerHTML=`<td>${i.name}</td><td>${i.company}</td><td>¥${i.price.toFixed(2)}</td><td>${i.median?i.median.toFixed(2):'-'}</td><td>${i.target?i.target.toFixed(2):'-'}</td><td>${status}</td>`;
@@ -660,11 +772,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       this.updateKPI();
     }
+
     initializeSelects(){
       this.company1.innerHTML='<option>Выберите...</option>';
       this.company2.innerHTML='<option>Выберите...</option>';
       this.DB.companies.forEach(c=>{this.company1.appendChild(new Option(c.name,c.name)); this.company2.appendChild(new Option(c.name,c.name));});
     }
+
     updateComparison(){
       const c1=this.company1.value,c2=this.company2.value;
       if(!c1||!c2||c1===c2) return;
@@ -676,6 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
       html+='</table>';
       document.getElementById('comparisonResult').innerHTML=html;
     }
+
     updateMatrix(){
       if(!this.DB.products.length) return;
       let html=`<thead><tr><th>Продукт</th>`;
@@ -692,6 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
       html+=`</tbody>`;
       this.matrixTable.innerHTML=html;
     }
+
     updateAnalytics(){
       const filter=this.analyticsFilter?.value?.toLowerCase()||'';
       this.analyticsTable.innerHTML='';
@@ -707,16 +823,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+
     performSearch(){
       const q=this.searchInput.value.trim().toLowerCase();
       if(!q){this.searchResults.innerHTML=''; return;}
+
       let html='';
-      this.DB.products.forEach(pid=>{
-        const name=this.DB.productNames[pid];
-        if(name.toLowerCase().includes(q)) html+=`<div>📦 ${name}</div>`;
-      });
-      this.searchResults.innerHTML=html||'❌ Ничего не найдено';
+
+      // Product search
+      const productMatches = this.DB.products.filter(pid => this.DB.productNames[pid].toLowerCase().includes(q));
+      if(productMatches.length){
+        productMatches.forEach(pid=>{
+          html+=`<div class="card"><div class="card-title">📦 ${this.DB.productNames[pid]}</div><table><tr><th>Компания</th><th>Цена</th></tr>`;
+          this.DB.companies.forEach(c=>{
+            const p=this.DB.prices[pid]?.[c.name];
+            if(p) html+=`<tr><td>${c.name}</td><td>¥${p.toFixed(2)}</td></tr>`;
+          });
+          html+='</table></div>';
+        });
+      }
+
+      // Company search
+      const companyMatches = this.DB.companies.filter(c => c.name.toLowerCase().includes(q));
+      if(companyMatches.length){
+        companyMatches.forEach(c=>{
+          html+=`<div class="card"><div class="card-title">🏢 ${c.name}</div><table><tr><th>Продукт</th><th>Цена</th></tr>`;
+          this.DB.products.forEach(pid=>{
+            const p=this.DB.prices[pid]?.[c.name];
+            if(p) html+=`<tr><td>${this.DB.productNames[pid]}</td><td>¥${p.toFixed(2)}</td></tr>`;
+          });
+          html+='</table></div>';
+        });
+      }
+
+      this.searchResults.innerHTML = html || '❌ Ничего не найдено';
     }
+
     sendAIMessage(){
       const msg=this.chatInputAI.value.trim(); if(!msg) return;
       this.chatMessagesAI.innerHTML+=`<div class="message me">${msg}</div>`;
@@ -731,6 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(msg.toLowerCase().includes('макс')) return `Максимальная цена: ¥${Math.max(...all).toFixed(2)}`;
       return 'Спросите о ценах, компаниях или медиане.';
     }
+
     addLogisticsRow(){
       this.DB.logistics.push({id:Date.now(),num:this.DB.logistics.length+1,supplier:'',article:'',name:'',quantity:'',unit:'шт.',status:'📋',planDate:'',factDate:'',cost:''});
       this.save(); this.updateLogisticsTable();
@@ -743,9 +886,33 @@ document.addEventListener('DOMContentLoaded', () => {
       this.DB.logistics=this.DB.logistics.filter(r=>r.id!==id);
       this.save(); this.updateLogisticsTable();
     }
+
+    initLogisticsFilters(){
+      const years = new Set();
+      this.DB.logistics.forEach(r=>{
+        const date = r.planDate || r.factDate;
+        if(date) years.add(date.split('-')[0]);
+      });
+
+      const yearList = Array.from(years).sort();
+      const currentYear = new Date().getFullYear().toString();
+      this.logisticsYear.innerHTML = `<option value="">Все годы</option>` + yearList.map(y=>`<option value="${y}">${y}</option>`).join('');
+      if(yearList.includes(currentYear)) this.logisticsYear.value=currentYear;
+
+      this.logisticsMonth.innerHTML = `<option value="">Все месяцы</option>` + 
+        Array.from({length:12},(_,i)=>`<option value="${String(i+1).padStart(2,'0')}">${i+1}</option>`).join('');
+    }
+
     updateLogisticsTable(){
       this.logisticsBody.innerHTML='';
+      const year = this.logisticsYear.value;
+      const month = this.logisticsMonth.value;
+
       this.DB.logistics.forEach(r=>{
+        const date = r.planDate || r.factDate;
+        if(year && (!date || !date.startsWith(year))) return;
+        if(month && (!date || date.split('-')[1] !== month)) return;
+
         const tr=document.createElement('tr');
         tr.innerHTML=`<td>${r.num}</td>
           <td><input value="${r.supplier}" data-id="${r.id}" data-field="supplier"></td>
@@ -761,10 +928,87 @@ document.addEventListener('DOMContentLoaded', () => {
         this.logisticsBody.appendChild(tr);
       });
     }
+
     clearLogistics(){this.DB.logistics=[]; this.save(); this.updateLogisticsTable();}
     clearAllData(){
       this.DB={companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]};
       this.save(); this.updateAll();
+    }
+
+    /* ====== GANTT ====== */
+    initGantt(){
+      const year = new Date().getFullYear();
+      this.ganttYearSelect.innerHTML = '';
+      for(let y=year-1;y<=year+2;y++){
+        this.ganttYearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+      }
+      this.ganttYearSelect.value = year;
+
+      this.renderProjectSelect();
+      this.renderGantt();
+
+      this.ganttAddProject.onclick=()=>{
+        const name=prompt('Название проекта:');
+        if(!name) return;
+        this.gantt.projects.push(name);
+        StorageService.set('ganttData', this.gantt);
+        this.renderProjectSelect();
+      };
+
+      this.ganttAddTask.onclick=()=>{
+        const project=this.ganttProjectSelect.value;
+        const name=this.ganttTaskName.value.trim();
+        const start=this.ganttTaskStart.value;
+        const end=this.ganttTaskEnd.value;
+        const color=this.ganttTaskColor.value;
+        if(!name||!start||!end) return alert('Заполните все поля');
+        this.gantt.tasks.push({id:Date.now(), project, name, start, end, color});
+        StorageService.set('ganttData', this.gantt);
+        this.renderGantt();
+      };
+
+      this.ganttProjectSelect.onchange=()=>this.renderGantt();
+      this.ganttYearSelect.onchange=()=>this.renderGantt();
+    }
+
+    renderProjectSelect(){
+      this.ganttProjectSelect.innerHTML='';
+      this.gantt.projects.forEach(p=>this.ganttProjectSelect.innerHTML+=`<option value="${p}">${p}</option>`);
+    }
+
+    renderGantt(){
+      const project=this.ganttProjectSelect.value;
+      const year=parseInt(this.ganttYearSelect.value);
+
+      const tasks = this.gantt.tasks.filter(t=>t.project===project);
+      let html=`<div class="months">`;
+      const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      months.forEach(m=>html+=`<div class="month-cell">${m}</div>`);
+      html+=`</div>`;
+
+      tasks.forEach(t=>{
+        const start=new Date(t.start);
+        const end=new Date(t.end);
+        if(start.getFullYear()>year || end.getFullYear()<year) return;
+
+        const yearStart=new Date(year,0,1);
+        const yearEnd=new Date(year,11,31);
+        const total=yearEnd-yearStart;
+
+        const left=((start-yearStart)/total)*100;
+        const width=((end-start)/total)*100;
+
+        html+=`
+          <div class="gantt-row">
+            <div class="gantt-task">${t.name}<br><small>${t.start} → ${t.end}</small></div>
+            <div class="gantt-timeline">
+              <div class="gantt-bar" style="left:${left}%;width:${width}%;background:${t.color};"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      this.ganttContainer.innerHTML=html || '<div>Нет задач</div>';
     }
   }
 
