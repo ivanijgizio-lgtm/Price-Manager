@@ -7,22 +7,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root{
-      --primary:#2f5cff;   /* 10% */
-      --secondary:#0f172a; /* 30% */
-      --accent:#22c55e;    /* 10% */
-      --accent-pink:#ec4899;
-
-      --bg:#0b1220;        /* 60% */
-      --surface:#0f172a;
-      --surface-2:#111827;
-      --text:#f1f5f9;
-      --muted:#94a3b8;
-      --border:#1f2937;
-
+      --primary:#2f5cff; --secondary:#0f172a; --accent:#22c55e; --accent-pink:#ec4899;
+      --bg:#0b1220; --surface:#0f172a; --surface-2:#111827; --text:#f1f5f9; --muted:#94a3b8; --border:#1f2937;
       --shadow-soft: 8px 8px 18px rgba(0,0,0,0.35), -6px -6px 16px rgba(255,255,255,0.02);
       --shadow-inset: inset 6px 6px 12px rgba(0,0,0,0.4), inset -6px -6px 12px rgba(255,255,255,0.02);
-      --radius:14px;
-      --transition:all .2s ease;
+      --radius:14px; --transition:all .2s ease;
     }
     body{margin:0;font-family:"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
     *{box-sizing:border-box;}
@@ -32,7 +21,6 @@
       --shadow-inset:inset 6px 6px 12px rgba(0,0,0,0.08),inset -6px -6px 12px rgba(255,255,255,0.9);}
     body.theme-graphite{--bg:#111827;--surface:#1f2937;--surface-2:#111827;}
 
-    /* Layout */
     .login-page{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,var(--primary),var(--accent-pink));}
     .login-box{background:var(--surface);padding:36px;border-radius:var(--radius);box-shadow:var(--shadow-soft);width:100%;max-width:420px;}
     .login-box h1{text-align:center;font-size:24px;margin-bottom:24px;background:linear-gradient(135deg,var(--primary),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -45,7 +33,6 @@
     .btn-primary:hover{transform:translateY(-1px);}
     .btn-danger{background:#ef4444;color:#fff;}
     .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
-    .neo{box-shadow:var(--shadow-soft);background:var(--surface);}
 
     .app{display:none;height:100vh;flex-direction:column;}
     .app.active{display:flex;}
@@ -82,10 +69,6 @@
 
     .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
 
-    .toast{position:fixed;right:16px;bottom:16px;background:var(--surface);padding:14px 18px;border-left:4px solid var(--accent);border-radius:10px;box-shadow:var(--shadow-soft);z-index:9999;}
-    .toast.error{border-left-color:#ef4444;}
-
-    /* Messenger */
     .chat-shell{display:grid;grid-template-columns:280px 1fr;height:560px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid var(--border);}
     .chat-sidebar{background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;}
     .chat-sidebar .head{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
@@ -105,9 +88,7 @@
     .file-label{padding:8px 10px;border:1px dashed var(--border);border-radius:10px;cursor:pointer;font-size:12px;}
     .file-name{font-size:12px;color:var(--accent);margin-top:4px;}
 
-    @media (max-width: 1100px){
-      .kpi-grid{grid-template-columns:repeat(2,1fr);}
-    }
+    @media (max-width: 1100px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
     @media (max-width: 900px){
       .content-wrapper{flex-direction:column;}
       .sidebar{width:100%;display:flex;overflow-x:auto;}
@@ -115,9 +96,7 @@
       .menu-item.active{border-bottom-color:var(--primary);}
       .chat-shell{grid-template-columns:1fr;}
     }
-    @media (max-width: 600px){
-      .kpi-grid{grid-template-columns:1fr;}
-    }
+    @media (max-width: 600px){.kpi-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body class="theme-ocean">
@@ -175,7 +154,6 @@
           <div class="kpi"><div class="kpi-label">Средняя цена</div><div class="kpi-value" id="kpiAvg">—</div></div>
           <div class="kpi"><div class="kpi-label">Лучшая компания</div><div class="kpi-value" id="kpiBest">—</div></div>
         </div>
-
         <div class="card">
           <div class="card-title">⚡ Быстрые действия</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -184,7 +162,6 @@
             <button class="btn btn-primary" onclick="document.querySelector('[data-section=messenger]').click()">💬 Чат логистики</button>
           </div>
         </div>
-
         <div class="card">
           <div class="card-title">⭐ Лучшие цены (Top 10)</div>
           <div class="table-wrap">
@@ -196,7 +173,6 @@
         </div>
       </section>
 
-      <!-- SEARCH -->
       <section id="search" class="section">
         <div class="card">
           <div class="card-title">🔍 Поиск</div>
@@ -205,7 +181,6 @@
         </div>
       </section>
 
-      <!-- COMPARE -->
       <section id="compare" class="section">
         <div class="card">
           <div class="card-title">⚖️ Сравнение</div>
@@ -217,23 +192,17 @@
         </div>
       </section>
 
-      <!-- MATRIX -->
       <section id="matrix" class="section">
         <div class="card">
           <div class="card-title">📋 Матрица</div>
-          <div class="table-wrap">
-            <table id="matrixTable"></table>
-          </div>
+          <div class="table-wrap"><table id="matrixTable"></table></div>
         </div>
       </section>
 
-      <!-- ANALYTICS -->
       <section id="analytics" class="section">
         <div class="card">
           <div class="card-title">📈 Аналитика</div>
-          <div class="filters">
-            <input id="analyticsFilter" placeholder="Фильтр по компании...">
-          </div>
+          <div class="filters"><input id="analyticsFilter" placeholder="Фильтр по компании..."></div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Компания</th><th>Кол-во</th><th>Средняя</th><th>Мин</th><th>Макс</th></tr></thead>
@@ -243,7 +212,6 @@
         </div>
       </section>
 
-      <!-- AI -->
       <section id="assistant" class="section">
         <div class="card">
           <div class="card-title">🤖 AI помощник</div>
@@ -255,7 +223,6 @@
         </div>
       </section>
 
-      <!-- LOGISTICS -->
       <section id="logistics" class="section">
         <div class="card">
           <div class="card-title">🚚 Логистика</div>
@@ -265,35 +232,20 @@
           </div>
           <div class="table-wrap" style="margin-top:12px;">
             <table>
-              <thead>
-                <tr><th>№</th><th>Поставщик</th><th>Артикул</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Статус</th><th>План</th><th>Факт</th><th>Стоимость</th><th></th></tr>
-              </thead>
+              <thead><tr><th>№</th><th>Поставщик</th><th>Артикул</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Статус</th><th>План</th><th>Факт</th><th>Стоимость</th><th></th></tr></thead>
               <tbody id="logisticsBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- UPLOAD -->
       <section id="upload" class="section">
-        <div class="card">
-          <div class="card-title">📥 Загрузка прайса (цены)</div>
-          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/>
-        </div>
-        <div class="card">
-          <div class="card-title">🎯 Target Price</div>
-          <input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/>
-        </div>
-        <div class="card">
-          <div class="card-title">🚚 Загрузка логистики</div>
-          <input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/>
-        </div>
-        <div class="card">
-          <button class="btn btn-danger" id="clearAllBtn">🗑 Очистить все</button>
-        </div>
+        <div class="card"><div class="card-title">📥 Загрузка прайса (цены)</div><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card"><div class="card-title">🎯 Target Price</div><input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card"><div class="card-title">🚚 Загрузка логистики</div><input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card"><button class="btn btn-danger" id="clearAllBtn">🗑 Очистить все</button></div>
       </section>
 
-      <!-- INSIGHTS -->
       <section id="insights" class="section">
         <div class="card">
           <div class="card-title">💡 AI Insights</div>
@@ -301,7 +253,6 @@
         </div>
       </section>
 
-      <!-- MESSENGER -->
       <section id="messenger" class="section">
         <div class="card">
           <div class="card-title">💬 SENDER — единый центр коммуникаций</div>
@@ -337,20 +288,486 @@
 </div>
 
 <script>
-  /* Всё остальное JS из предыдущей версии остаётся без изменений.
-     Добавлены UX‑фишки и аналитический фильтр ниже: */
+document.addEventListener('DOMContentLoaded', () => {
+  /* === Storage + Theme === */
+  class StorageService {
+    static get(key, fallback = null){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
+    static set(key, value){try{localStorage.setItem(key, JSON.stringify(value))}catch{}}
+    static remove(key){try{localStorage.removeItem(key)}catch{}}
+  }
+  class ThemeManager {
+    constructor(selectEl){
+      const saved = StorageService.get('theme','theme-ocean');
+      document.body.className = saved;
+      selectEl.value = saved;
+      selectEl.addEventListener('change',()=>{document.body.className=selectEl.value;StorageService.set('theme',selectEl.value)});
+    }
+  }
 
-  document.addEventListener('keydown', (e)=>{
-    if(e.ctrlKey && e.key.toLowerCase()==='k'){
-      e.preventDefault();
-      document.querySelector('[data-section=search]').click();
-      document.getElementById('searchInput').focus();
+  /* === Messenger === */
+  class MessengerApp {
+    constructor(){
+      this.storageKey='senderData';
+      this.currentUser='Вы';
+      this.emojiList=["😊","👍","🔥","📊","✅","🙌","🚀","💡","🤝","📌","⚡","📎","💬","📝"];
+      this.data = StorageService.get(this.storageKey,{
+        chats:[
+          { id:'c1', name:'Алексей (разработчик)', type:'direct', members:['Вы','Алексей'], messages:[] },
+          { id:'c2', name:'Отдел логистики', type:'group', members:['Вы','Ирина','Павел'], messages:[] },
+          { id:'c3', name:'Отдел закупок', type:'group', members:['Вы','Ольга','Сергей'], messages:[] },
+          { id:'c4', name:'Отдел развития', type:'group', members:['Вы','Дмитрий','Анна'], messages:[] }
+        ],
+        activeChatId:'c1'
+      });
     }
-    if(e.ctrlKey && e.key.toLowerCase()==='m'){
-      e.preventDefault();
-      document.querySelector('[data-section=messenger]').click();
+    init(){
+      this.cache(); this.renderEmoji(); this.renderChats(); this.selectChat(this.data.activeChatId); this.bind();
     }
-  });
+    cache(){
+      this.chatList=document.getElementById('chatList');
+      this.chatTitle=document.getElementById('chatTitle');
+      this.chatMembers=document.getElementById('chatMembers');
+      this.chatMessages=document.getElementById('chatMessages');
+      this.messageInput=document.getElementById('messageInput');
+      this.sendBtn=document.getElementById('sendBtn');
+      this.addChatBtn=document.getElementById('addChatBtn');
+      this.fileInput=document.getElementById('fileInput');
+      this.fileName=document.getElementById('fileName');
+      this.emojiToggle=document.getElementById('emojiToggle');
+      this.emojiPicker=document.getElementById('emojiPicker');
+    }
+    bind(){
+      this.sendBtn.onclick=()=>this.sendMessage();
+      this.addChatBtn.onclick=()=>this.createChat();
+      this.fileInput.onchange=()=>this.onFileSelected();
+      this.emojiToggle.onclick=()=>this.toggleEmoji();
+      document.addEventListener('click',(e)=>{
+        if(!e.target.closest('#emojiPicker') && !e.target.closest('#emojiToggle')) this.emojiPicker.style.display='none';
+      });
+    }
+    save(){StorageService.set(this.storageKey,this.data)}
+    renderEmoji(){
+      this.emojiPicker.innerHTML='';
+      this.emojiList.forEach(e=>{
+        const btn=document.createElement('button');
+        btn.className='emoji-btn';
+        btn.textContent=e;
+        btn.onclick=()=>this.insertEmoji(e);
+        this.emojiPicker.appendChild(btn);
+      });
+    }
+    toggleEmoji(){this.emojiPicker.style.display=this.emojiPicker.style.display==='flex'?'none':'flex'}
+    insertEmoji(emoji){
+      const start=this.messageInput.selectionStart, end=this.messageInput.selectionEnd;
+      const text=this.messageInput.value;
+      this.messageInput.value=text.substring(0,start)+emoji+text.substring(end);
+      this.messageInput.focus();
+    }
+    renderChats(){
+      this.chatList.innerHTML='';
+      this.data.chats.forEach(chat=>{
+        const div=document.createElement('div');
+        div.className='chat-item'+(chat.id===this.data.activeChatId?' active':'');
+        div.textContent=(chat.type==='group'?'👥 ':'👤 ')+chat.name;
+        div.onclick=()=>this.selectChat(chat.id);
+        this.chatList.appendChild(div);
+      });
+    }
+    selectChat(id){
+      this.data.activeChatId=id; this.renderChats();
+      const chat=this.getActiveChat();
+      this.chatTitle.textContent=chat.name;
+      this.chatMembers.textContent=chat.members.join(', ');
+      this.renderMessages(); this.save();
+    }
+    getActiveChat(){return this.data.chats.find(c=>c.id===this.data.activeChatId)}
+    renderMessages(){
+      this.chatMessages.innerHTML='';
+      const chat=this.getActiveChat();
+      chat.messages.forEach(msg=>{
+        const div=document.createElement('div');
+        div.className='message '+(msg.author===this.currentUser?'me':'other');
+        div.innerHTML=`<div class="meta">${msg.author} • ${msg.time}</div><div>${msg.text||''}</div>${msg.file?`<div style="margin-top:6px;font-size:12px;color:var(--accent);">📎 ${msg.file.name}</div>`:''}`;
+        this.chatMessages.appendChild(div);
+      });
+      this.chatMessages.scrollTop=this.chatMessages.scrollHeight;
+    }
+    onFileSelected(){const file=this.fileInput.files[0];this.fileName.textContent=file?file.name:''}
+    sendMessage(){
+      const text=this.messageInput.value.trim();
+      const file=this.fileInput.files[0];
+      if(!text && !file) return;
+      const msg={author:this.currentUser,text,time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),file:file?{name:file.name,size:file.size}:null};
+      const chat=this.getActiveChat();
+      chat.messages.push(msg);
+      this.messageInput.value=''; this.fileInput.value=''; this.fileName.textContent='';
+      this.renderMessages(); this.save(); this.autoReply(chat);
+    }
+    autoReply(chat){
+      if(chat.type==='direct' && chat.name.includes('Алексей')){
+        const replies=['Принял ✅ Проверю данные.','Отлично, посмотрю 📝','Хорошо, свяжусь после анализа.','Данные получил, начинаю работу.'];
+        setTimeout(()=>{chat.messages.push({author:'Алексей',text:replies[Math.floor(Math.random()*replies.length)],time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}); this.renderMessages(); this.save();},1000+Math.random()*1500);
+      } else if(chat.type==='group'){
+        setTimeout(()=>{chat.messages.push({author:'Система',text:'Сообщение доставлено всем участникам ✅',time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}); this.renderMessages(); this.save();},600);
+      }
+    }
+    createChat(){
+      const type=prompt("Тип чата: direct / group","group"); if(!type) return;
+      const name=prompt("Название чата:"); if(!name) return;
+      const members=prompt("Участники (через запятую):","Вы").split(',').map(m=>m.trim());
+      const chat={id:'c'+Date.now(),name,type,members:members.length?members:['Вы'],messages:[]};
+      this.data.chats.push(chat); this.selectChat(chat.id);
+    }
+  }
+
+  /* === Main App === */
+  class PriceManagerApp {
+    constructor(){
+      this.DB = StorageService.get('priceManagerDB', {companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]});
+      this.currentUser = StorageService.get('currentUserPM', null);
+      this.init();
+    }
+    init(){
+      this.cache(); this.bind();
+      this.currentUser ? this.showMain() : this.showLogin();
+      new ThemeManager(this.themeSelect);
+      this.messenger=new MessengerApp(); this.messenger.init();
+      this.updateAll();
+    }
+    cache(){
+      this.loginPage=document.getElementById('loginPage');
+      this.mainApp=document.getElementById('mainApp');
+      this.themeSelect=document.getElementById('themeSelect');
+      this.loginBtn=document.getElementById('loginBtn');
+      this.logoutBtn=document.getElementById('logoutBtn');
+      this.loginEmail=document.getElementById('loginEmail');
+      this.loginPassword=document.getElementById('loginPassword');
+      this.userName=document.getElementById('userName');
+
+      this.excelFile=document.getElementById('excelFile');
+      this.targetPriceFile=document.getElementById('targetPriceFile');
+      this.logisticsFile=document.getElementById('logisticsFile');
+      this.clearAllBtn=document.getElementById('clearAllBtn');
+
+      this.searchInput=document.getElementById('searchInput');
+      this.searchResults=document.getElementById('searchResults');
+
+      this.company1=document.getElementById('company1');
+      this.company2=document.getElementById('company2');
+
+      this.addLogisticsBtn=document.getElementById('addLogisticsBtn');
+      this.clearLogisticsBtn=document.getElementById('clearLogisticsBtn');
+      this.logisticsBody=document.getElementById('logisticsBody');
+
+      this.topPricesList=document.getElementById('topPricesList');
+      this.analyticsTable=document.getElementById('analyticsTable');
+      this.matrixTable=document.getElementById('matrixTable');
+
+      this.chatMessagesAI=document.getElementById('chatMessagesAI');
+      this.chatInputAI=document.getElementById('chatInputAI');
+      this.chatSendBtnAI=document.getElementById('chatSendBtnAI');
+
+      this.kpiProducts=document.getElementById('kpiProducts');
+      this.kpiCompanies=document.getElementById('kpiCompanies');
+      this.kpiAvg=document.getElementById('kpiAvg');
+      this.kpiBest=document.getElementById('kpiBest');
+      this.analyticsFilter=document.getElementById('analyticsFilter');
+    }
+    bind(){
+      this.loginBtn.onclick=()=>this.handleLogin();
+      this.logoutBtn.onclick=()=>this.handleLogout();
+
+      this.excelFile.onchange=(e)=>this.handlePriceUpload(e);
+      this.targetPriceFile.onchange=(e)=>this.handleTargetUpload(e);
+      this.logisticsFile.onchange=(e)=>this.handleLogisticsUpload(e);
+      this.clearAllBtn.onclick=()=>this.clearAllData();
+
+      this.searchInput.oninput=()=>this.performSearch();
+      this.company1.onchange=()=>this.updateComparison();
+      this.company2.onchange=()=>this.updateComparison();
+
+      this.addLogisticsBtn.onclick=()=>this.addLogisticsRow();
+      this.clearLogisticsBtn.onclick=()=>this.clearLogistics();
+
+      this.chatSendBtnAI.onclick=()=>this.sendAIMessage();
+
+      this.analyticsFilter?.addEventListener('input',()=>this.updateAnalytics());
+
+      this.logisticsBody.addEventListener('input',(e)=>{
+        const el=e.target;
+        const id=el.dataset.id; const field=el.dataset.field;
+        if(id && field) this.updateLogisticsRow(Number(id), field, el.value);
+      });
+      this.logisticsBody.addEventListener('click',(e)=>{
+        const btn=e.target.closest('[data-delete]');
+        if(btn) this.deleteLogisticsRow(Number(btn.dataset.delete));
+      });
+
+      document.querySelectorAll('.menu-item').forEach(item=>{
+        item.addEventListener('click',()=>{
+          document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+          document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+          item.classList.add('active');
+          document.getElementById(item.dataset.section).classList.add('active');
+        });
+      });
+
+      document.addEventListener('keydown',(e)=>{
+        if(e.ctrlKey && e.key.toLowerCase()==='k'){e.preventDefault();document.querySelector('[data-section=search]').click();this.searchInput.focus();}
+        if(e.ctrlKey && e.key.toLowerCase()==='m'){e.preventDefault();document.querySelector('[data-section=messenger]').click();}
+      });
+    }
+    save(){StorageService.set('priceManagerDB', this.DB);}
+    showLogin(){this.loginPage.style.display='flex'; this.mainApp.classList.remove('active');}
+    showMain(){this.loginPage.style.display='none'; this.mainApp.classList.add('active'); if(this.currentUser) this.userName.textContent=this.currentUser.name;}
+    handleLogin(){
+      const email=this.loginEmail.value.trim();
+      const pass=this.loginPassword.value.trim();
+      if(email==='admin@example.com' && pass==='admin123'){
+        this.currentUser={name:'Администратор',email};
+        StorageService.set('currentUserPM', this.currentUser);
+        this.showMain();
+      }else alert('Неверный логин. Email: admin@example.com | Пароль: admin123');
+    }
+    handleLogout(){StorageService.remove('currentUserPM'); this.currentUser=null; this.showLogin();}
+    parsePrice(val){
+      if(val===null||val===undefined) return null;
+      let s=String(val).trim();
+      if(!s||['n/a','na','/'].includes(s.toLowerCase())) return null;
+      s=s.replace(',', '.').replace(/[^\d.]/g,'');
+      const p=parseFloat(s); return isNaN(p)?null:p;
+    }
+    updateAll(){this.updateDashboard(); this.initializeSelects(); this.updateMatrix(); this.updateAnalytics(); this.updateLogisticsTable();}
+    updateKPI(){
+      this.kpiProducts.textContent=this.DB.products.length;
+      this.kpiCompanies.textContent=this.DB.companies.length;
+      const all=[];
+      Object.values(this.DB.prices).forEach(p=>Object.values(p).forEach(v=>all.push(v)));
+      if(all.length){
+        const avg=(all.reduce((a,b)=>a+b,0)/all.length).toFixed(2);
+        this.kpiAvg.textContent='¥'+avg;
+        let best='—',bestAvg=Infinity;
+        this.DB.companies.forEach(c=>{
+          const prices=[];
+          this.DB.products.forEach(pid=>{const p=this.DB.prices[pid]?.[c.name]; if(p) prices.push(p);});
+          if(prices.length){
+            const a=prices.reduce((x,y)=>x+y,0)/prices.length;
+            if(a<bestAvg){bestAvg=a;best=c.name;}
+          }
+        });
+        this.kpiBest.textContent=best;
+      }
+    }
+    handlePriceUpload(e){
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=(ev)=>{
+        const data=new Uint8Array(ev.target.result);
+        const wb=XLSX.read(data,{type:'array'});
+        const sheet=wb.Sheets[wb.SheetNames[0]];
+        const json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
+        const headersRaw=json[0].slice(2);
+        const headers=headersRaw.filter(h=>h && !String(h).toLowerCase().includes('медиана') && !String(h).toLowerCase().includes('target'));
+        this.DB.companies=headers.map((h,i)=>({id:i+1,name:String(h).trim()}));
+        this.DB.prices={}; this.DB.products=[]; this.DB.productNames={}; this.DB.medians={};
+
+        for(let i=1;i<json.length;i++){
+          const row=json[i]; if(!row||!row[1]) continue;
+          const pid=row[0]?.toString().trim()||String(i);
+          const pname=String(row[1]).trim();
+          this.DB.products.push(pid);
+          this.DB.productNames[pid]=pname;
+          this.DB.prices[pid]={};
+
+          const prices=[];
+          for(let j=2;j<row.length && (j-2)<headers.length;j++){
+            const company=headers[j-2];
+            const p=this.parsePrice(row[j]);
+            if(p){this.DB.prices[pid][company]=p; prices.push(p);}
+          }
+          if(prices.length){
+            prices.sort((a,b)=>a-b);
+            const mid=Math.floor(prices.length/2);
+            this.DB.medians[pid]=prices.length%2?prices[mid]:(prices[mid-1]+prices[mid])/2;
+          }
+          if(this.DB.targetByName[pname]) this.DB.targetPrices[pid]=this.DB.targetByName[pname];
+        }
+        this.save(); this.updateAll(); alert('✅ Прайс загружен');
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    handleTargetUpload(e){
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=(ev)=>{
+        const data=new Uint8Array(ev.target.result);
+        const wb=XLSX.read(data,{type:'array'});
+        const sheet=wb.Sheets[wb.SheetNames[0]];
+        const json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
+        this.DB.targetPrices={}; this.DB.targetByName={};
+        for(let i=1;i<json.length;i++){
+          const name=String(json[i][0]||'').trim();
+          const p=this.parsePrice(json[i][1]);
+          if(name && p){
+            this.DB.targetByName[name]=p;
+            const pid=Object.keys(this.DB.productNames).find(k=>this.DB.productNames[k]===name);
+            if(pid) this.DB.targetPrices[pid]=p;
+          }
+        }
+        this.save(); this.updateDashboard(); alert('✅ Target Price загружены');
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    handleLogisticsUpload(e){
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=(ev)=>{
+        const data=new Uint8Array(ev.target.result);
+        const wb=XLSX.read(data,{type:'array'});
+        const sheet=wb.Sheets[wb.SheetNames[0]];
+        const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
+        const result=[]; let lastSupplier='', lastNum='';
+        for(let i=2;i<rows.length;i++){
+          const r=rows[i]; if(!r) continue;
+          const num=r[0]||lastNum; const supplier=r[1]||lastSupplier;
+          const article=r[4]; const name=r[5];
+          if(!article && !name) continue;
+          lastSupplier=supplier||lastSupplier; lastNum=num||lastNum;
+          const qty=r[6], unit=r[7], planDate=r[17]||'', factDate=r[18]||'', cost=r[19]||'';
+          let status='📋 В ожидании'; if(factDate) status='✅ Доставлена'; else if(planDate) status='🚚 В пути';
+          result.push({id:Date.now()+i,num:num||'',supplier:supplier||'',article:article||'',name:name||'',quantity:qty||'',unit:unit||'шт.',status,planDate,factDate,cost});
+        }
+        this.DB.logistics=result; this.save(); this.updateLogisticsTable(); alert('✅ Логистика загружена');
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    updateDashboard(){
+      this.topPricesList.innerHTML='';
+      const all=[];
+      Object.keys(this.DB.prices).forEach(pid=>{
+        Object.entries(this.DB.prices[pid]).forEach(([company,price])=>{
+          all.push({pid,company,price,median:this.DB.medians[pid],target:this.DB.targetPrices[pid],name:this.DB.productNames[pid]});
+        });
+      });
+      all.sort((a,b)=>a.price-b.price);
+      all.slice(0,10).forEach(i=>{
+        const status=i.target?(i.price<=i.target?'✅ OK':'❌ High'):'⚪';
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${i.name}</td><td>${i.company}</td><td>¥${i.price.toFixed(2)}</td><td>${i.median?i.median.toFixed(2):'-'}</td><td>${i.target?i.target.toFixed(2):'-'}</td><td>${status}</td>`;
+        this.topPricesList.appendChild(tr);
+      });
+      this.updateKPI();
+    }
+    initializeSelects(){
+      this.company1.innerHTML='<option>Выберите...</option>';
+      this.company2.innerHTML='<option>Выберите...</option>';
+      this.DB.companies.forEach(c=>{this.company1.appendChild(new Option(c.name,c.name)); this.company2.appendChild(new Option(c.name,c.name));});
+    }
+    updateComparison(){
+      const c1=this.company1.value,c2=this.company2.value;
+      if(!c1||!c2||c1===c2) return;
+      let html=`<table><tr><th>Продукт</th><th>${c1}</th><th>${c2}</th><th>Разница</th></tr>`;
+      this.DB.products.forEach(pid=>{
+        const p1=this.DB.prices[pid]?.[c1], p2=this.DB.prices[pid]?.[c2];
+        if(p1 && p2) html+=`<tr><td>${this.DB.productNames[pid]}</td><td>¥${p1}</td><td>¥${p2}</td><td>${(p1-p2).toFixed(2)}</td></tr>`;
+      });
+      html+='</table>';
+      document.getElementById('comparisonResult').innerHTML=html;
+    }
+    updateMatrix(){
+      if(!this.DB.products.length) return;
+      let html=`<thead><tr><th>Продукт</th>`;
+      this.DB.companies.forEach(c=>html+=`<th>${c.name}</th>`);
+      html+=`<th>Медиана</th></tr></thead><tbody>`;
+      this.DB.products.forEach(pid=>{
+        html+=`<tr><td>${this.DB.productNames[pid]}</td>`;
+        this.DB.companies.forEach(c=>{
+          const p=this.DB.prices[pid]?.[c.name];
+          html+=`<td>${p?`¥${p.toFixed(2)}`:'-'}</td>`;
+        });
+        html+=`<td>${this.DB.medians[pid]?.toFixed(2)||'-'}</td></tr>`;
+      });
+      html+=`</tbody>`;
+      this.matrixTable.innerHTML=html;
+    }
+    updateAnalytics(){
+      const filter=this.analyticsFilter?.value?.toLowerCase()||'';
+      this.analyticsTable.innerHTML='';
+      this.DB.companies.forEach(c=>{
+        if(filter && !c.name.toLowerCase().includes(filter)) return;
+        const prices=[];
+        this.DB.products.forEach(pid=>{const p=this.DB.prices[pid]?.[c.name]; if(p) prices.push(p);});
+        if(prices.length){
+          const avg=prices.reduce((a,b)=>a+b,0)/prices.length;
+          const tr=document.createElement('tr');
+          tr.innerHTML=`<td>${c.name}</td><td>${prices.length}</td><td>¥${avg.toFixed(2)}</td><td>¥${Math.min(...prices).toFixed(2)}</td><td>¥${Math.max(...prices).toFixed(2)}</td>`;
+          this.analyticsTable.appendChild(tr);
+        }
+      });
+    }
+    performSearch(){
+      const q=this.searchInput.value.trim().toLowerCase();
+      if(!q){this.searchResults.innerHTML=''; return;}
+      let html='';
+      this.DB.products.forEach(pid=>{
+        const name=this.DB.productNames[pid];
+        if(name.toLowerCase().includes(q)) html+=`<div>📦 ${name}</div>`;
+      });
+      this.searchResults.innerHTML=html||'❌ Ничего не найдено';
+    }
+    sendAIMessage(){
+      const msg=this.chatInputAI.value.trim(); if(!msg) return;
+      this.chatMessagesAI.innerHTML+=`<div class="message me">${msg}</div>`;
+      this.chatMessagesAI.innerHTML+=`<div class="message other">${this.getAIResponse(msg)}</div>`;
+      this.chatInputAI.value='';
+    }
+    getAIResponse(msg){
+      const all=[]; Object.values(this.DB.prices).forEach(p=>Object.values(p).forEach(v=>all.push(v)));
+      if(!all.length) return 'Нет данных. Загрузите прайс.';
+      if(msg.toLowerCase().includes('средн')) return `Средняя цена: ¥${(all.reduce((a,b)=>a+b,0)/all.length).toFixed(2)}`;
+      if(msg.toLowerCase().includes('мин')) return `Минимальная цена: ¥${Math.min(...all).toFixed(2)}`;
+      if(msg.toLowerCase().includes('макс')) return `Максимальная цена: ¥${Math.max(...all).toFixed(2)}`;
+      return 'Спросите о ценах, компаниях или медиане.';
+    }
+    addLogisticsRow(){
+      this.DB.logistics.push({id:Date.now(),num:this.DB.logistics.length+1,supplier:'',article:'',name:'',quantity:'',unit:'шт.',status:'📋',planDate:'',factDate:'',cost:''});
+      this.save(); this.updateLogisticsTable();
+    }
+    updateLogisticsRow(id,field,value){
+      const row=this.DB.logistics.find(r=>r.id===id);
+      if(row){row[field]=value; this.save();}
+    }
+    deleteLogisticsRow(id){
+      this.DB.logistics=this.DB.logistics.filter(r=>r.id!==id);
+      this.save(); this.updateLogisticsTable();
+    }
+    updateLogisticsTable(){
+      this.logisticsBody.innerHTML='';
+      this.DB.logistics.forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${r.num}</td>
+          <td><input value="${r.supplier}" data-id="${r.id}" data-field="supplier"></td>
+          <td><input value="${r.article}" data-id="${r.id}" data-field="article"></td>
+          <td><input value="${r.name}" data-id="${r.id}" data-field="name"></td>
+          <td><input value="${r.quantity}" data-id="${r.id}" data-field="quantity"></td>
+          <td><input value="${r.unit}" data-id="${r.id}" data-field="unit"></td>
+          <td><input value="${r.status}" data-id="${r.id}" data-field="status"></td>
+          <td><input type="date" value="${r.planDate}" data-id="${r.id}" data-field="planDate"></td>
+          <td><input type="date" value="${r.factDate}" data-id="${r.id}" data-field="factDate"></td>
+          <td><input value="${r.cost}" data-id="${r.id}" data-field="cost"></td>
+          <td><button class="btn btn-danger" data-delete="${r.id}">❌</button></td>`;
+        this.logisticsBody.appendChild(tr);
+      });
+    }
+    clearLogistics(){this.DB.logistics=[]; this.save(); this.updateLogisticsTable();}
+    clearAllData(){
+      this.DB={companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]};
+      this.save(); this.updateAll();
+    }
+  }
+
+  new PriceManagerApp();
+});
 </script>
 </body>
 </html>
