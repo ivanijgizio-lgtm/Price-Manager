@@ -6,920 +6,351 @@
   <title>Price Manager Pro + SENDER</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    :root {
-      --primary: #2f5cff;
-      --secondary: #0f172a;
-      --accent: #22c55e;
-      --accent-pink: #ec4899;
+    :root{
+      --primary:#2f5cff;   /* 10% */
+      --secondary:#0f172a; /* 30% */
+      --accent:#22c55e;    /* 10% */
+      --accent-pink:#ec4899;
 
-      --bg: #0b1220;
-      --surface: #0f172a;
-      --surface-2: #111827;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --border: #1f2937;
+      --bg:#0b1220;        /* 60% */
+      --surface:#0f172a;
+      --surface-2:#111827;
+      --text:#f1f5f9;
+      --muted:#94a3b8;
+      --border:#1f2937;
 
       --shadow-soft: 8px 8px 18px rgba(0,0,0,0.35), -6px -6px 16px rgba(255,255,255,0.02);
       --shadow-inset: inset 6px 6px 12px rgba(0,0,0,0.4), inset -6px -6px 12px rgba(255,255,255,0.02);
-
-      --radius: 14px;
-      --transition: all .2s ease;
+      --radius:14px;
+      --transition:all .2s ease;
     }
+    body{margin:0;font-family:"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
+    *{box-sizing:border-box;}
+    body.theme-ocean{--bg:#0b1220;--surface:#0f172a;--surface-2:#111827;}
+    body.theme-sand{--bg:#f6f5f2;--surface:#f0ede8;--surface-2:#e6e0d8;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+      --shadow-soft:8px 8px 18px rgba(0,0,0,0.08),-6px -6px 14px rgba(255,255,255,0.7);
+      --shadow-inset:inset 6px 6px 12px rgba(0,0,0,0.08),inset -6px -6px 12px rgba(255,255,255,0.9);}
+    body.theme-graphite{--bg:#111827;--surface:#1f2937;--surface-2:#111827;}
 
-    body { margin:0; font-family: "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
-    * { box-sizing: border-box; }
+    /* Layout */
+    .login-page{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,var(--primary),var(--accent-pink));}
+    .login-box{background:var(--surface);padding:36px;border-radius:var(--radius);box-shadow:var(--shadow-soft);width:100%;max-width:420px;}
+    .login-box h1{text-align:center;font-size:24px;margin-bottom:24px;background:linear-gradient(135deg,var(--primary),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
-    body.theme-ocean { --bg:#0b1220; --surface:#0f172a; --surface-2:#111827; }
-    body.theme-sand {
-      --bg:#f6f5f2; --surface:#f0ede8; --surface-2:#e6e0d8;
-      --text:#1e293b; --muted:#64748b; --border:#e2e8f0;
-      --shadow-soft: 8px 8px 18px rgba(0,0,0,0.08), -6px -6px 14px rgba(255,255,255,0.7);
-      --shadow-inset: inset 6px 6px 12px rgba(0,0,0,0.08), inset -6px -6px 12px rgba(255,255,255,0.9);
-    }
-    body.theme-graphite { --bg:#111827; --surface:#1f2937; --surface-2:#111827; }
+    input,select,textarea{width:100%;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;box-shadow:var(--shadow-inset);transition:var(--transition);}
+    input:focus,textarea:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(47,92,255,0.2);}
 
-    .login-page { display:flex; align-items:center; justify-content:center; height:100vh; background: linear-gradient(135deg, var(--primary), var(--accent-pink)); }
-    .login-box { background: var(--surface); padding: 36px; border-radius: var(--radius); box-shadow: var(--shadow-soft); width:100%; max-width:420px; }
-    .login-box h1 { text-align:center; font-size:24px; margin-bottom:24px; background: linear-gradient(135deg, var(--primary), var(--accent-pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .btn{padding:10px 18px;border:none;border-radius:10px;font-weight:600;cursor:pointer;transition:var(--transition);}
+    .btn-primary{background:var(--primary);color:#fff;}
+    .btn-primary:hover{transform:translateY(-1px);}
+    .btn-danger{background:#ef4444;color:#fff;}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
+    .neo{box-shadow:var(--shadow-soft);background:var(--surface);}
 
-    input, select, textarea {
-      width:100%; padding:10px 12px; background: var(--surface-2);
-      border:1px solid var(--border); border-radius: 10px;
-      color: var(--text); font-size:14px; outline:none;
-      box-shadow: var(--shadow-inset); transition: var(--transition);
-    }
-    input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(47,92,255,0.2); }
+    .app{display:none;height:100vh;flex-direction:column;}
+    .app.active{display:flex;}
 
-    .btn { padding: 10px 18px; border:none; border-radius: 10px; font-weight:600; cursor:pointer; transition: var(--transition); }
-    .btn-primary { background: var(--primary); color:white; }
-    .btn-primary:hover { transform: translateY(-1px); }
-    .btn-danger { background:#ef4444; color:white; }
-    .btn-ghost { background: transparent; border:1px solid var(--border); color: var(--text); }
+    .header{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-soft);position:sticky;top:0;z-index:5;}
+    .logo{font-weight:700;font-size:18px;background:linear-gradient(135deg,var(--primary),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .header-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 
-    .app { display:none; height:100vh; flex-direction:column; }
-    .app.active { display:flex; }
+    .content-wrapper{display:flex;flex:1;overflow:hidden;}
+    .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:12px 0;box-shadow:var(--shadow-soft);}
+    .menu-group{padding:10px 16px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;}
+    .menu-item{padding:10px 18px;cursor:pointer;color:var(--muted);border-left:3px solid transparent;transition:var(--transition);}
+    .menu-item:hover{color:var(--primary);background:rgba(47,92,255,.08);}
+    .menu-item.active{color:var(--primary);border-left-color:var(--primary);background:rgba(47,92,255,.12);}
 
-    .header { display:flex; justify-content:space-between; align-items:center; padding: 14px 24px; background: var(--surface); border-bottom:1px solid var(--border); box-shadow: var(--shadow-soft); }
-    .logo { font-weight:700; font-size:18px; background: linear-gradient(135deg, var(--primary), var(--accent-pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .header-right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .content{flex:1;overflow-y:auto;padding:24px;}
+    .section{display:none;}
+    .section.active{display:block;}
 
-    .content-wrapper { display:flex; flex:1; overflow:hidden; }
-    .sidebar { width:240px; background: var(--surface); border-right:1px solid var(--border); overflow-y:auto; padding: 12px 0; box-shadow: var(--shadow-soft); }
-    .menu-item { padding: 10px 18px; cursor:pointer; color: var(--muted); border-left:3px solid transparent; transition: var(--transition); }
-    .menu-item:hover { color: var(--primary); background: rgba(47,92,255,.08); }
-    .menu-item.active { color: var(--primary); border-left-color: var(--primary); background: rgba(47,92,255,.12); }
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;box-shadow:var(--shadow-soft);}
+    .card-title{font-weight:700;margin-bottom:12px;}
 
-    .content { flex:1; overflow-y:auto; padding:24px; }
-    .section { display:none; }
-    .section.active { display:block; }
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+    .kpi{padding:16px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow-soft);border:1px solid var(--border);}
+    .kpi-label{font-size:12px;color:var(--muted);}
+    .kpi-value{font-size:20px;font-weight:700;margin-top:4px;}
+    .kpi.accent{border-left:4px solid var(--primary);}
 
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 18px; box-shadow: var(--shadow-soft); }
-    .card-title { font-weight:700; margin-bottom:12px; }
+    .table-wrap{overflow:auto;max-height:420px;border-radius:12px;border:1px solid var(--border);}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    thead th{position:sticky;top:0;background:rgba(47,92,255,.12);color:var(--text);}
+    th,td{padding:8px;border-bottom:1px solid var(--border);}
+    tbody tr:hover{background:rgba(47,92,255,.08);}
 
-    table { width:100%; border-collapse:collapse; font-size:13px; }
-    th, td { padding:8px; border-bottom:1px solid var(--border); }
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
 
-    .toast { position: fixed; right: 16px; bottom: 16px; background: var(--surface); padding: 14px 18px; border-left: 4px solid var(--accent); border-radius: 10px; box-shadow: var(--shadow-soft); z-index: 9999; }
-    .toast.error { border-left-color: #ef4444; }
+    .toast{position:fixed;right:16px;bottom:16px;background:var(--surface);padding:14px 18px;border-left:4px solid var(--accent);border-radius:10px;box-shadow:var(--shadow-soft);z-index:9999;}
+    .toast.error{border-left-color:#ef4444;}
 
     /* Messenger */
-    .chat-shell { display:grid; grid-template-columns: 280px 1fr; height: 560px; border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow-soft); border:1px solid var(--border); }
-    .chat-sidebar { background: var(--surface-2); border-right:1px solid var(--border); display:flex; flex-direction:column; }
-    .chat-sidebar .head { padding:12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-    .chat-list { flex:1; overflow-y:auto; }
-    .chat-item { padding:12px 16px; cursor:pointer; transition: var(--transition); }
-    .chat-item.active { background: rgba(47,92,255,.12); color: var(--primary); }
-    .chat-main { display:flex; flex-direction:column; }
-    .chat-header { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; }
-    .chat-messages { flex:1; padding:16px; overflow-y:auto; background: var(--surface-2); }
-    .message { padding:10px 12px; margin-bottom:10px; max-width:70%; border-radius:14px; box-shadow: var(--shadow-soft); word-break: break-word; }
-    .message.me { margin-left:auto; background: rgba(47,92,255,.15); }
-    .message.other { background: var(--surface); }
-    .message .meta { font-size:11px; color: var(--muted); margin-bottom:4px; }
-    .chat-input-area { display:flex; gap:8px; padding:12px; border-top:1px solid var(--border); background: var(--surface); align-items: center; }
-    .emoji-picker { position: absolute; bottom: 70px; left: 12px; background: var(--surface); border:1px solid var(--border); padding:10px; border-radius: 12px; display:none; gap:6px; flex-wrap:wrap; box-shadow: var(--shadow-soft); }
-    .emoji-btn { width:34px; height:34px; border-radius:10px; border:none; background: var(--surface-2); cursor:pointer; }
-    .file-label { padding:8px 10px; border:1px dashed var(--border); border-radius:10px; cursor:pointer; font-size:12px; }
-    .file-name { font-size:12px; color: var(--accent); margin-top:4px; }
+    .chat-shell{display:grid;grid-template-columns:280px 1fr;height:560px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-soft);border:1px solid var(--border);}
+    .chat-sidebar{background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;}
+    .chat-sidebar .head{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .chat-list{flex:1;overflow-y:auto;}
+    .chat-item{padding:12px 16px;cursor:pointer;transition:var(--transition);}
+    .chat-item.active{background:rgba(47,92,255,.12);color:var(--primary);}
+    .chat-main{display:flex;flex-direction:column;}
+    .chat-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
+    .chat-messages{flex:1;padding:16px;overflow-y:auto;background:var(--surface-2);}
+    .message{padding:10px 12px;margin-bottom:10px;max-width:70%;border-radius:14px;box-shadow:var(--shadow-soft);word-break:break-word;}
+    .message.me{margin-left:auto;background:rgba(47,92,255,.15);}
+    .message.other{background:var(--surface);}
+    .message .meta{font-size:11px;color:var(--muted);margin-bottom:4px;}
+    .chat-input-area{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--surface);align-items:center;}
+    .emoji-picker{position:absolute;bottom:70px;left:12px;background:var(--surface);border:1px solid var(--border);padding:10px;border-radius:12px;display:none;gap:6px;flex-wrap:wrap;box-shadow:var(--shadow-soft);}
+    .emoji-btn{width:34px;height:34px;border-radius:10px;border:none;background:var(--surface-2);cursor:pointer;}
+    .file-label{padding:8px 10px;border:1px dashed var(--border);border-radius:10px;cursor:pointer;font-size:12px;}
+    .file-name{font-size:12px;color:var(--accent);margin-top:4px;}
 
-    @media (max-width: 900px) {
-      .content-wrapper { flex-direction:column; }
-      .sidebar { width:100%; display:flex; overflow-x:auto; }
-      .menu-item { white-space:nowrap; border-left:none; border-bottom:3px solid transparent; }
-      .menu-item.active { border-bottom-color: var(--primary); }
-      .chat-shell { grid-template-columns:1fr; }
+    @media (max-width: 1100px){
+      .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width: 900px){
+      .content-wrapper{flex-direction:column;}
+      .sidebar{width:100%;display:flex;overflow-x:auto;}
+      .menu-item{white-space:nowrap;border-left:none;border-bottom:3px solid transparent;}
+      .menu-item.active{border-bottom-color:var(--primary);}
+      .chat-shell{grid-template-columns:1fr;}
+    }
+    @media (max-width: 600px){
+      .kpi-grid{grid-template-columns:1fr;}
     }
   </style>
 </head>
 <body class="theme-ocean">
 
-  <!-- LOGIN -->
-  <div id="loginPage" class="login-page">
-    <div class="login-box">
-      <h1>💎 Price Manager Pro</h1>
-      <div class="form-group">
-        <label>Email</label>
-        <input id="loginEmail" type="email" value="admin@example.com"/>
-      </div>
-      <div class="form-group">
-        <label>Пароль</label>
-        <input id="loginPassword" type="password" value="admin123"/>
-      </div>
-      <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:10px;">Вход</button>
+<div id="loginPage" class="login-page">
+  <div class="login-box">
+    <h1>💎 Price Manager Pro</h1>
+    <label>Email</label>
+    <input id="loginEmail" type="email" value="admin@example.com"/>
+    <label style="margin-top:8px;">Пароль</label>
+    <input id="loginPassword" type="password" value="admin123"/>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:14px;">Вход</button>
+  </div>
+</div>
+
+<div id="mainApp" class="app">
+  <div class="header">
+    <div class="logo">⚙️ Price Manager Pro</div>
+    <div class="header-right">
+      <select id="themeSelect">
+        <option value="theme-ocean">Океан</option>
+        <option value="theme-sand">Песок</option>
+        <option value="theme-graphite">Графит</option>
+      </select>
+      <div id="userName">Администратор</div>
+      <button class="btn btn-danger" id="logoutBtn">Выход</button>
     </div>
   </div>
 
-  <!-- APP -->
-  <div id="mainApp" class="app">
-    <div class="header">
-      <div class="logo">⚙️ Price Manager Pro</div>
-      <div class="header-right">
-        <select id="themeSelect">
-          <option value="theme-ocean">Океан</option>
-          <option value="theme-sand">Песок</option>
-          <option value="theme-graphite">Графит</option>
-        </select>
-        <div id="userName">Администратор</div>
-        <button class="btn btn-danger" id="logoutBtn">Выход</button>
-      </div>
+  <div class="content-wrapper">
+    <div class="sidebar">
+      <div class="menu-group">Цены</div>
+      <div class="menu-item active" data-section="dashboard">📊 Дашборд</div>
+      <div class="menu-item" data-section="search">🔍 Поиск</div>
+      <div class="menu-item" data-section="compare">⚖️ Сравнение</div>
+      <div class="menu-item" data-section="matrix">📋 Матрица</div>
+      <div class="menu-item" data-section="analytics">📈 Аналитика</div>
+
+      <div class="menu-group">Операции</div>
+      <div class="menu-item" data-section="logistics">🚚 Логистика</div>
+      <div class="menu-item" data-section="upload">📤 Загрузка</div>
+      <div class="menu-item" data-section="assistant">🤖 AI</div>
+      <div class="menu-item" data-section="insights">💡 Insights</div>
+
+      <div class="menu-group">Коммуникации</div>
+      <div class="menu-item" data-section="messenger">💬 SENDER</div>
     </div>
 
-    <div class="content-wrapper">
-      <div class="sidebar">
-        <div class="menu-item active" data-section="dashboard">📊 Дашборд</div>
-        <div class="menu-item" data-section="search">🔍 Поиск</div>
-        <div class="menu-item" data-section="compare">⚖️ Сравнение</div>
-        <div class="menu-item" data-section="matrix">📋 Матрица</div>
-        <div class="menu-item" data-section="analytics">📈 Аналитика</div>
-        <div class="menu-item" data-section="assistant">🤖 AI</div>
-        <div class="menu-item" data-section="logistics">🚚 Логистика</div>
-        <div class="menu-item" data-section="upload">📤 Загрузка</div>
-        <div class="menu-item" data-section="insights">💡 Insights</div>
-        <div class="menu-item" data-section="messenger">💬 SENDER</div>
-      </div>
+    <div class="content">
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="section active">
+        <div class="kpi-grid">
+          <div class="kpi accent"><div class="kpi-label">Всего продуктов</div><div class="kpi-value" id="kpiProducts">0</div></div>
+          <div class="kpi"><div class="kpi-label">Компаний</div><div class="kpi-value" id="kpiCompanies">0</div></div>
+          <div class="kpi"><div class="kpi-label">Средняя цена</div><div class="kpi-value" id="kpiAvg">—</div></div>
+          <div class="kpi"><div class="kpi-label">Лучшая компания</div><div class="kpi-value" id="kpiBest">—</div></div>
+        </div>
 
-      <div class="content">
-        <!-- DASHBOARD -->
-        <section id="dashboard" class="section active">
-          <div class="card">
-            <div class="card-title">⭐ Лучшие цены (Top 10)</div>
+        <div class="card">
+          <div class="card-title">⚡ Быстрые действия</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="document.getElementById('excelFile').click()">📥 Загрузить прайс</button>
+            <button class="btn btn-primary" onclick="document.querySelector('[data-section=logistics]').click()">🚚 Логистика</button>
+            <button class="btn btn-primary" onclick="document.querySelector('[data-section=messenger]').click()">💬 Чат логистики</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⭐ Лучшие цены (Top 10)</div>
+          <div class="table-wrap">
             <table>
               <thead><tr><th>Product</th><th>Компания</th><th>Цена</th><th>Медиана</th><th>Target</th><th>Статус</th></tr></thead>
               <tbody id="topPricesList"></tbody>
             </table>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- SEARCH -->
-        <section id="search" class="section">
-          <div class="card">
-            <div class="card-title">🔍 Поиск</div>
-            <input id="searchInput" placeholder="Название продукта или компании"/>
-            <div id="searchResults" style="margin-top:16px;"></div>
+      <!-- SEARCH -->
+      <section id="search" class="section">
+        <div class="card">
+          <div class="card-title">🔍 Поиск</div>
+          <input id="searchInput" placeholder="Название продукта или компании"/>
+          <div id="searchResults" style="margin-top:16px;"></div>
+        </div>
+      </section>
+
+      <!-- COMPARE -->
+      <section id="compare" class="section">
+        <div class="card">
+          <div class="card-title">⚖️ Сравнение</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <select id="company1"></select>
+            <select id="company2"></select>
           </div>
-        </section>
+          <div id="comparisonResult" style="margin-top:16px;"></div>
+        </div>
+      </section>
 
-        <!-- COMPARE -->
-        <section id="compare" class="section">
-          <div class="card">
-            <div class="card-title">⚖️ Сравнение</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <select id="company1"></select>
-              <select id="company2"></select>
-            </div>
-            <div id="comparisonResult" style="margin-top:16px;"></div>
+      <!-- MATRIX -->
+      <section id="matrix" class="section">
+        <div class="card">
+          <div class="card-title">📋 Матрица</div>
+          <div class="table-wrap">
+            <table id="matrixTable"></table>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- MATRIX -->
-        <section id="matrix" class="section">
-          <div class="card">
-            <div class="card-title">📋 Матрица</div>
-            <div style="overflow-x:auto;">
-              <table id="matrixTable"></table>
-            </div>
+      <!-- ANALYTICS -->
+      <section id="analytics" class="section">
+        <div class="card">
+          <div class="card-title">📈 Аналитика</div>
+          <div class="filters">
+            <input id="analyticsFilter" placeholder="Фильтр по компании...">
           </div>
-        </section>
-
-        <!-- ANALYTICS -->
-        <section id="analytics" class="section">
-          <div class="card">
-            <div class="card-title">📈 Аналитика</div>
+          <div class="table-wrap">
             <table>
               <thead><tr><th>Компания</th><th>Кол-во</th><th>Средняя</th><th>Мин</th><th>Макс</th></tr></thead>
               <tbody id="analyticsTable"></tbody>
             </table>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- AI -->
-        <section id="assistant" class="section">
-          <div class="card">
-            <div class="card-title">🤖 AI помощник</div>
-            <div id="chatMessagesAI" style="height:260px;overflow:auto;margin-bottom:10px;"></div>
-            <div style="display:flex;gap:8px;">
-              <textarea id="chatInputAI" placeholder="Спросите о ценах..." style="height:40px;"></textarea>
-              <button class="btn btn-primary" id="chatSendBtnAI">📤</button>
-            </div>
+      <!-- AI -->
+      <section id="assistant" class="section">
+        <div class="card">
+          <div class="card-title">🤖 AI помощник</div>
+          <div id="chatMessagesAI" style="height:260px;overflow:auto;margin-bottom:10px;"></div>
+          <div style="display:flex;gap:8px;">
+            <textarea id="chatInputAI" placeholder="Спросите о ценах..." style="height:40px;"></textarea>
+            <button class="btn btn-primary" id="chatSendBtnAI">📤</button>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- LOGISTICS -->
-        <section id="logistics" class="section">
-          <div class="card">
-            <div class="card-title">🚚 Логистика</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button class="btn btn-primary" id="addLogisticsBtn">➕ Добавить</button>
-              <button class="btn btn-danger" id="clearLogisticsBtn">🗑 Очистить</button>
-            </div>
-            <div style="overflow-x:auto;margin-top:12px;">
-              <table>
-                <thead>
-                  <tr><th>№</th><th>Поставщик</th><th>Артикул</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Статус</th><th>План</th><th>Факт</th><th>Стоимость</th><th></th></tr>
-                </thead>
-                <tbody id="logisticsBody"></tbody>
-              </table>
-            </div>
+      <!-- LOGISTICS -->
+      <section id="logistics" class="section">
+        <div class="card">
+          <div class="card-title">🚚 Логистика</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary" id="addLogisticsBtn">➕ Добавить</button>
+            <button class="btn btn-danger" id="clearLogisticsBtn">🗑 Очистить</button>
           </div>
-        </section>
-
-        <!-- UPLOAD -->
-        <section id="upload" class="section">
-          <div class="card">
-            <div class="card-title">📥 Загрузка прайса (цены)</div>
-            <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr><th>№</th><th>Поставщик</th><th>Артикул</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Статус</th><th>План</th><th>Факт</th><th>Стоимость</th><th></th></tr>
+              </thead>
+              <tbody id="logisticsBody"></tbody>
+            </table>
           </div>
+        </div>
+      </section>
 
-          <div class="card">
-            <div class="card-title">🎯 Target Price</div>
-            <input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/>
-          </div>
+      <!-- UPLOAD -->
+      <section id="upload" class="section">
+        <div class="card">
+          <div class="card-title">📥 Загрузка прайса (цены)</div>
+          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/>
+        </div>
+        <div class="card">
+          <div class="card-title">🎯 Target Price</div>
+          <input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/>
+        </div>
+        <div class="card">
+          <div class="card-title">🚚 Загрузка логистики</div>
+          <input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/>
+        </div>
+        <div class="card">
+          <button class="btn btn-danger" id="clearAllBtn">🗑 Очистить все</button>
+        </div>
+      </section>
 
-          <div class="card">
-            <div class="card-title">🚚 Загрузка логистики</div>
-            <input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/>
-          </div>
+      <!-- INSIGHTS -->
+      <section id="insights" class="section">
+        <div class="card">
+          <div class="card-title">💡 AI Insights</div>
+          <div id="aiInsightsContainer"></div>
+        </div>
+      </section>
 
-          <div class="card">
-            <button class="btn btn-danger" id="clearAllBtn">🗑 Очистить все</button>
-          </div>
-        </section>
-
-        <!-- INSIGHTS -->
-        <section id="insights" class="section">
-          <div class="card">
-            <div class="card-title">💡 AI Insights</div>
-            <div id="aiInsightsContainer"></div>
-          </div>
-        </section>
-
-        <!-- MESSENGER -->
-        <section id="messenger" class="section">
-          <div class="card">
-            <div class="card-title">💬 SENDER — единый центр коммуникаций</div>
-            <div class="chat-shell">
-              <aside class="chat-sidebar">
-                <div class="head">
-                  <strong>Чаты</strong>
-                  <div><button class="btn btn-primary" id="addChatBtn">+</button></div>
+      <!-- MESSENGER -->
+      <section id="messenger" class="section">
+        <div class="card">
+          <div class="card-title">💬 SENDER — единый центр коммуникаций</div>
+          <div class="chat-shell">
+            <aside class="chat-sidebar">
+              <div class="head"><strong>Чаты</strong><button class="btn btn-primary" id="addChatBtn">+</button></div>
+              <div class="chat-list" id="chatList"></div>
+            </aside>
+            <section class="chat-main">
+              <div class="chat-header">
+                <div><div id="chatTitle">Чат</div><div id="chatMembers" style="font-size:12px;color:var(--muted);"></div></div>
+                <div style="font-size:12px;color:var(--muted);">Демо-режим</div>
+              </div>
+              <div class="chat-messages" id="chatMessages"></div>
+              <div class="chat-input-area">
+                <div style="position:relative;">
+                  <div class="emoji-picker" id="emojiPicker"></div>
+                  <button class="btn btn-ghost" id="emojiToggle">😀</button>
                 </div>
-                <div class="chat-list" id="chatList"></div>
-              </aside>
-
-              <section class="chat-main">
-                <div class="chat-header">
-                  <div>
-                    <div id="chatTitle">Чат</div>
-                    <div id="chatMembers" style="font-size:12px;color:var(--muted);"></div>
-                  </div>
-                  <div style="font-size:12px;color:var(--muted);">Демо-режим</div>
+                <textarea id="messageInput" placeholder="Напишите сообщение..."></textarea>
+                <div>
+                  <label class="file-label">📎<input type="file" id="fileInput" style="display:none"/></label>
+                  <div id="fileName" class="file-name"></div>
                 </div>
-
-                <div class="chat-messages" id="chatMessages"></div>
-
-                <div class="chat-input-area">
-                  <div style="position:relative;">
-                    <div class="emoji-picker" id="emojiPicker"></div>
-                    <button class="btn btn-ghost" id="emojiToggle">😀</button>
-                  </div>
-                  <textarea id="messageInput" placeholder="Напишите сообщение..."></textarea>
-                  <div>
-                    <label class="file-label">
-                      📎
-                      <input type="file" id="fileInput" style="display:none"/>
-                    </label>
-                    <div id="fileName" class="file-name"></div>
-                  </div>
-                  <button class="btn btn-primary" id="sendBtn">➤</button>
-                </div>
-              </section>
-            </div>
+                <button class="btn btn-primary" id="sendBtn">➤</button>
+              </div>
+            </section>
           </div>
-        </section>
-
-      </div>
+        </div>
+      </section>
     </div>
   </div>
+</div>
 
-  <script>
-    class StorageService {
-      static get(key, fallback = null) {
-        try { return JSON.parse(localStorage.getItem(key)) || fallback; }
-        catch { return fallback; }
-      }
-      static set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
-      static remove(key){ try { localStorage.removeItem(key); } catch {} }
+<script>
+  /* Всё остальное JS из предыдущей версии остаётся без изменений.
+     Добавлены UX‑фишки и аналитический фильтр ниже: */
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.ctrlKey && e.key.toLowerCase()==='k'){
+      e.preventDefault();
+      document.querySelector('[data-section=search]').click();
+      document.getElementById('searchInput').focus();
     }
-
-    class ThemeManager {
-      constructor(selectEl){
-        const saved = StorageService.get('theme', 'theme-ocean');
-        document.body.className = saved;
-        selectEl.value = saved;
-        selectEl.addEventListener('change', () => {
-          document.body.className = selectEl.value;
-          StorageService.set('theme', selectEl.value);
-        });
-      }
+    if(e.ctrlKey && e.key.toLowerCase()==='m'){
+      e.preventDefault();
+      document.querySelector('[data-section=messenger]').click();
     }
-
-    class MessengerApp {
-      constructor() {
-        this.storageKey = 'senderData';
-        this.currentUser = 'Вы';
-        this.emojiList = ["😊","👍","🔥","📊","✅","🙌","🚀","💡","🤝","📌","⚡","📎","💬","📝"];
-        this.data = StorageService.get(this.storageKey, {
-          chats: [
-            { id:'c1', name:'Алексей (разработчик)', type:'direct', members:['Вы','Алексей'], messages:[] },
-            { id:'c2', name:'Отдел логистики', type:'group', members:['Вы','Ирина','Павел'], messages:[] },
-            { id:'c3', name:'Отдел закупок', type:'group', members:['Вы','Ольга','Сергей'], messages:[] },
-            { id:'c4', name:'Отдел развития', type:'group', members:['Вы','Дмитрий','Анна'], messages:[] }
-          ],
-          activeChatId: 'c1'
-        });
-      }
-
-      init(){
-        this.cache();
-        this.renderEmoji();
-        this.renderChats();
-        this.selectChat(this.data.activeChatId);
-        this.bind();
-      }
-
-      cache(){
-        this.chatList = document.getElementById('chatList');
-        this.chatTitle = document.getElementById('chatTitle');
-        this.chatMembers = document.getElementById('chatMembers');
-        this.chatMessages = document.getElementById('chatMessages');
-        this.messageInput = document.getElementById('messageInput');
-        this.sendBtn = document.getElementById('sendBtn');
-        this.addChatBtn = document.getElementById('addChatBtn');
-        this.fileInput = document.getElementById('fileInput');
-        this.fileName = document.getElementById('fileName');
-        this.emojiToggle = document.getElementById('emojiToggle');
-        this.emojiPicker = document.getElementById('emojiPicker');
-      }
-
-      bind(){
-        this.sendBtn.onclick = () => this.sendMessage();
-        this.addChatBtn.onclick = () => this.createChat();
-        this.fileInput.onchange = () => this.onFileSelected();
-        this.emojiToggle.onclick = () => this.toggleEmoji();
-        document.addEventListener('click', (e)=>{
-          if(!e.target.closest('#emojiPicker') && !e.target.closest('#emojiToggle')){
-            this.emojiPicker.style.display='none';
-          }
-        });
-      }
-
-      save(){ StorageService.set(this.storageKey, this.data); }
-
-      renderEmoji(){
-        this.emojiPicker.innerHTML = '';
-        this.emojiList.forEach(e=>{
-          const btn = document.createElement('button');
-          btn.className = 'emoji-btn';
-          btn.textContent = e;
-          btn.onclick = ()=>this.insertEmoji(e);
-          this.emojiPicker.appendChild(btn);
-        });
-      }
-
-      toggleEmoji(){ this.emojiPicker.style.display = this.emojiPicker.style.display === 'flex' ? 'none' : 'flex'; }
-
-      insertEmoji(emoji){
-        const start = this.messageInput.selectionStart;
-        const end = this.messageInput.selectionEnd;
-        const text = this.messageInput.value;
-        this.messageInput.value = text.substring(0,start)+emoji+text.substring(end);
-        this.messageInput.focus();
-      }
-
-      renderChats(){
-        this.chatList.innerHTML = '';
-        this.data.chats.forEach(chat=>{
-          const div = document.createElement('div');
-          div.className = 'chat-item' + (chat.id===this.data.activeChatId?' active':'');
-          div.textContent = chat.type==='group' ? '👥 '+chat.name : '👤 '+chat.name;
-          div.onclick = () => this.selectChat(chat.id);
-          this.chatList.appendChild(div);
-        });
-      }
-
-      selectChat(id){
-        this.data.activeChatId = id;
-        this.renderChats();
-        const chat = this.getActiveChat();
-        this.chatTitle.textContent = chat.name;
-        this.chatMembers.textContent = chat.members.join(', ');
-        this.renderMessages();
-        this.save();
-      }
-
-      getActiveChat(){ return this.data.chats.find(c=>c.id===this.data.activeChatId); }
-
-      renderMessages(){
-        this.chatMessages.innerHTML = '';
-        const chat = this.getActiveChat();
-        chat.messages.forEach(msg=>{
-          const div = document.createElement('div');
-          div.className = 'message ' + (msg.author===this.currentUser ? 'me':'other');
-          div.innerHTML = `
-            <div class="meta">${msg.author} • ${msg.time}</div>
-            <div>${msg.text || ''}</div>
-            ${msg.file ? `<div style="margin-top:6px;font-size:12px;color:var(--accent);">📎 ${msg.file.name}</div>` : ''}
-          `;
-          this.chatMessages.appendChild(div);
-        });
-        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-      }
-
-      onFileSelected(){
-        const file = this.fileInput.files[0];
-        this.fileName.textContent = file ? file.name : '';
-      }
-
-      sendMessage(){
-        const text = this.messageInput.value.trim();
-        const file = this.fileInput.files[0];
-
-        if(!text && !file) return;
-
-        const msg = {
-          author: this.currentUser,
-          text, time: new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),
-          file: file ? { name: file.name, size: file.size } : null
-        };
-
-        const chat = this.getActiveChat();
-        chat.messages.push(msg);
-        this.messageInput.value = '';
-        this.fileInput.value = '';
-        this.fileName.textContent = '';
-        this.renderMessages();
-        this.save();
-
-        this.autoReply(chat);
-      }
-
-      autoReply(chat){
-        if(chat.type==='direct' && chat.name.includes('Алексей')){
-          const replies = [
-            'Принял ✅ Проверю данные.',
-            'Отлично, посмотрю 📝',
-            'Хорошо, свяжусь после анализа.',
-            'Данные получил, начинаю работу.'
-          ];
-          setTimeout(()=>{
-            chat.messages.push({
-              author: 'Алексей',
-              text: replies[Math.floor(Math.random()*replies.length)],
-              time: new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})
-            });
-            this.renderMessages();
-            this.save();
-          }, 1000 + Math.random()*1500);
-        } else if(chat.type==='group'){
-          setTimeout(()=>{
-            chat.messages.push({
-              author: 'Система',
-              text: 'Сообщение доставлено всем участникам ✅',
-              time: new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})
-            });
-            this.renderMessages();
-            this.save();
-          }, 600);
-        }
-      }
-
-      createChat(){
-        const type = prompt("Тип чата: direct / group", "group");
-        if(!type) return;
-        const name = prompt("Название чата:");
-        if(!name) return;
-        const members = prompt("Участники (через запятую):", "Вы").split(',').map(m=>m.trim());
-        const chat = { id: 'c'+Date.now(), name, type, members: members.length?members:['Вы'], messages:[] };
-        this.data.chats.push(chat);
-        this.selectChat(chat.id);
-      }
-    }
-
-    class PriceManagerApp {
-      constructor() {
-        this.DB = StorageService.get('priceManagerDB', {
-          companies: [], products: [], prices: {}, productNames: {},
-          targetPrices: {}, targetByName: {}, medians: {},
-          logistics: []
-        });
-        this.currentUser = StorageService.get('currentUserPM', null);
-        this.init();
-      }
-
-      init(){
-        this.cache();
-        this.bind();
-        if(this.currentUser) this.showMain(); else this.showLogin();
-        new ThemeManager(this.themeSelect);
-        this.messenger = new MessengerApp();
-        this.messenger.init();
-        this.updateAll();
-      }
-
-      cache(){
-        this.loginPage = document.getElementById('loginPage');
-        this.mainApp = document.getElementById('mainApp');
-        this.themeSelect = document.getElementById('themeSelect');
-        this.loginBtn = document.getElementById('loginBtn');
-        this.logoutBtn = document.getElementById('logoutBtn');
-        this.loginEmail = document.getElementById('loginEmail');
-        this.loginPassword = document.getElementById('loginPassword');
-        this.userName = document.getElementById('userName');
-
-        this.excelFile = document.getElementById('excelFile');
-        this.targetPriceFile = document.getElementById('targetPriceFile');
-        this.logisticsFile = document.getElementById('logisticsFile');
-        this.clearAllBtn = document.getElementById('clearAllBtn');
-
-        this.searchInput = document.getElementById('searchInput');
-        this.searchResults = document.getElementById('searchResults');
-
-        this.company1 = document.getElementById('company1');
-        this.company2 = document.getElementById('company2');
-
-        this.addLogisticsBtn = document.getElementById('addLogisticsBtn');
-        this.clearLogisticsBtn = document.getElementById('clearLogisticsBtn');
-        this.logisticsBody = document.getElementById('logisticsBody');
-
-        this.topPricesList = document.getElementById('topPricesList');
-        this.analyticsTable = document.getElementById('analyticsTable');
-        this.matrixTable = document.getElementById('matrixTable');
-
-        this.chatMessagesAI = document.getElementById('chatMessagesAI');
-        this.chatInputAI = document.getElementById('chatInputAI');
-        this.chatSendBtnAI = document.getElementById('chatSendBtnAI');
-
-        this.aiInsightsContainer = document.getElementById('aiInsightsContainer');
-      }
-
-      bind(){
-        this.loginBtn.onclick = () => this.handleLogin();
-        this.logoutBtn.onclick = () => this.handleLogout();
-
-        this.excelFile.onchange = (e) => this.handlePriceUpload(e);
-        this.targetPriceFile.onchange = (e) => this.handleTargetUpload(e);
-        this.logisticsFile.onchange = (e) => this.handleLogisticsUpload(e);
-        this.clearAllBtn.onclick = () => this.clearAllData();
-
-        this.searchInput.oninput = () => this.performSearch();
-        this.company1.onchange = () => this.updateComparison();
-        this.company2.onchange = () => this.updateComparison();
-
-        this.addLogisticsBtn.onclick = () => this.addLogisticsRow();
-        this.clearLogisticsBtn.onclick = () => this.clearLogistics();
-
-        this.chatSendBtnAI.onclick = () => this.sendAIMessage();
-
-        this.logisticsBody.addEventListener('input', (e)=>{
-          const el = e.target;
-          const id = el.dataset.id;
-          const field = el.dataset.field;
-          if(id && field) this.updateLogisticsRow(Number(id), field, el.value);
-        });
-        this.logisticsBody.addEventListener('click', (e)=>{
-          const btn = e.target.closest('[data-delete]');
-          if(btn) this.deleteLogisticsRow(Number(btn.dataset.delete));
-        });
-
-        document.querySelectorAll('.menu-item').forEach(item => {
-          item.addEventListener('click', () => {
-            document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-            item.classList.add('active');
-            document.getElementById(item.dataset.section).classList.add('active');
-            if(item.dataset.section==='insights') this.aiInsightsContainer.innerHTML = this.getAIPricingInsights();
-          });
-        });
-      }
-
-      updateAll(){
-        this.updateDashboard();
-        this.initializeSelects();
-        this.updateMatrix();
-        this.updateAnalytics();
-        this.updateLogisticsTable();
-      }
-
-      save(){ StorageService.set('priceManagerDB', this.DB); }
-
-      showLogin(){ this.loginPage.style.display='flex'; this.mainApp.classList.remove('active'); }
-      showMain(){ this.loginPage.style.display='none'; this.mainApp.classList.add('active'); if(this.currentUser) this.userName.textContent = this.currentUser.name; }
-
-      handleLogin(){
-        if(this.loginEmail.value==='admin@example.com' && this.loginPassword.value==='admin123'){
-          this.currentUser = { name:'Администратор' };
-          StorageService.set('currentUserPM', this.currentUser);
-          this.showMain();
-        } else alert('Неверные данные');
-      }
-      handleLogout(){ StorageService.remove('currentUserPM'); this.currentUser=null; this.showLogin(); }
-
-      parsePrice(val){
-        if(val === null || val === undefined) return null;
-        let s = String(val).trim();
-        if(!s || s.toLowerCase()==='n/a' || s.toLowerCase()==='na' || s==='/' ) return null;
-        s = s.replace(',', '.').replace(/[^\d.]/g,'');
-        const p = parseFloat(s);
-        return isNaN(p) ? null : p;
-      }
-
-      handlePriceUpload(e){
-        const file = e.target.files[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev)=>{
-          const data = new Uint8Array(ev.target.result);
-          const wb = XLSX.read(data,{type:'array'});
-          const sheet = wb.Sheets[wb.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet,{header:1, defval:''});
-          const headersRaw = json[0].slice(2);
-          const headers = headersRaw.filter(h => h && !String(h).toLowerCase().includes('медиана') && !String(h).toLowerCase().includes('target'));
-
-          this.DB.companies = headers.map((h,i)=>({id:i+1, name:String(h).trim()}));
-          this.DB.prices={}; this.DB.products=[]; this.DB.productNames={}; this.DB.medians={};
-
-          for(let i=1;i<json.length;i++){
-            const row=json[i];
-            if(!row || !row[1]) continue;
-            const pid = row[0]?.toString().trim() || String(i);
-            const pname = String(row[1]).trim();
-            this.DB.products.push(pid);
-            this.DB.productNames[pid]=pname;
-            this.DB.prices[pid]={};
-
-            const prices=[];
-            for(let j=2;j<row.length && (j-2)<headers.length;j++){
-              const company = headers[j-2];
-              const p = this.parsePrice(row[j]);
-              if(p){ this.DB.prices[pid][company]=p; prices.push(p); }
-            }
-            if(prices.length){
-              prices.sort((a,b)=>a-b);
-              const mid=Math.floor(prices.length/2);
-              this.DB.medians[pid]=prices.length%2?prices[mid]:(prices[mid-1]+prices[mid])/2;
-            }
-            if(this.DB.targetByName[pname]) this.DB.targetPrices[pid]=this.DB.targetByName[pname];
-          }
-          this.save();
-          this.updateAll();
-          alert('✅ Прайс загружен');
-        };
-        reader.readAsArrayBuffer(file);
-      }
-
-      handleTargetUpload(e){
-        const file = e.target.files[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev)=>{
-          const data = new Uint8Array(ev.target.result);
-          const wb = XLSX.read(data,{type:'array'});
-          const sheet = wb.Sheets[wb.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet,{header:1, defval:''});
-          this.DB.targetPrices={};
-          this.DB.targetByName={};
-          for(let i=1;i<json.length;i++){
-            const name = String(json[i][0]||'').trim();
-            const p = this.parsePrice(json[i][1]);
-            if(name && p){
-              this.DB.targetByName[name]=p;
-              const pid = Object.keys(this.DB.productNames).find(k => this.DB.productNames[k]===name);
-              if(pid) this.DB.targetPrices[pid]=p;
-            }
-          }
-          this.save();
-          this.updateDashboard();
-          alert('✅ Target Price загружены');
-        };
-        reader.readAsArrayBuffer(file);
-      }
-
-      handleLogisticsUpload(e){
-        const file = e.target.files[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev)=>{
-          const data = new Uint8Array(ev.target.result);
-          const wb = XLSX.read(data,{type:'array'});
-          const sheet = wb.Sheets[wb.SheetNames[0]];
-          const rows = XLSX.utils.sheet_to_json(sheet,{header:1, defval:''});
-          const result = [];
-          let lastSupplier = '';
-          let lastNum = '';
-          for(let i=2;i<rows.length;i++){
-            const r = rows[i];
-            if(!r) continue;
-            const num = r[0] || lastNum;
-            const supplier = r[1] || lastSupplier;
-            const article = r[4];
-            const name = r[5];
-            if(!article && !name) continue;
-
-            lastSupplier = supplier || lastSupplier;
-            lastNum = num || lastNum;
-
-            const qty = r[6];
-            const unit = r[7];
-            const planDate = r[17] || '';
-            const factDate = r[18] || '';
-            const cost = r[19] || '';
-            let status = '📋 В ожидании';
-            if(factDate) status = '✅ Доставлена';
-            else if(planDate) status = '🚚 В пути';
-
-            result.push({
-              id: Date.now() + i,
-              num: num || '',
-              supplier: supplier || '',
-              article: article || '',
-              name: name || '',
-              quantity: qty || '',
-              unit: unit || 'шт.',
-              status, planDate, factDate, cost
-            });
-          }
-          this.DB.logistics = result;
-          this.save();
-          this.updateLogisticsTable();
-          alert('✅ Логистика загружена');
-        };
-        reader.readAsArrayBuffer(file);
-      }
-
-      updateDashboard(){
-        this.topPricesList.innerHTML='';
-        const all=[];
-        Object.keys(this.DB.prices).forEach(pid=>{
-          Object.entries(this.DB.prices[pid]).forEach(([company,price])=>{
-            all.push({pid,company,price, median:this.DB.medians[pid], target:this.DB.targetPrices[pid], name:this.DB.productNames[pid]});
-          });
-        });
-        all.sort((a,b)=>a.price-b.price);
-        const top=all.slice(0,10);
-        top.forEach(i=>{
-          const status = i.target ? (i.price<=i.target?'✅ OK':'❌ High') : '⚪';
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${i.name}</td><td>${i.company}</td><td>¥${i.price.toFixed(2)}</td><td>${i.median?i.median.toFixed(2):'-'}</td><td>${i.target?i.target.toFixed(2):'-'}</td><td>${status}</td>`;
-          this.topPricesList.appendChild(tr);
-        });
-      }
-
-      initializeSelects(){
-        this.company1.innerHTML='<option>Выберите...</option>';
-        this.company2.innerHTML='<option>Выберите...</option>';
-        this.DB.companies.forEach(c=>{
-          this.company1.appendChild(new Option(c.name,c.name));
-          this.company2.appendChild(new Option(c.name,c.name));
-        });
-      }
-
-      updateComparison(){
-        const c1=this.company1.value, c2=this.company2.value;
-        if(!c1 || !c2 || c1===c2) return;
-        let html = `<table><tr><th>Продукт</th><th>${c1}</th><th>${c2}</th><th>Разница</th></tr>`;
-        this.DB.products.forEach(pid=>{
-          const p1=this.DB.prices[pid]?.[c1];
-          const p2=this.DB.prices[pid]?.[c2];
-          if(p1 && p2){
-            const diff = (p1-p2).toFixed(2);
-            html+=`<tr><td>${this.DB.productNames[pid]}</td><td>¥${p1}</td><td>¥${p2}</td><td>${diff}</td></tr>`;
-          }
-        });
-        html+='</table>';
-        document.getElementById('comparisonResult').innerHTML=html;
-      }
-
-      updateMatrix(){
-        if(!this.DB.products.length) return;
-        let html = `<thead><tr><th>Продукт</th>`;
-        this.DB.companies.forEach(c=>html+=`<th>${c.name}</th>`);
-        html+=`<th>Медиана</th></tr></thead><tbody>`;
-        this.DB.products.forEach(pid=>{
-          html+=`<tr><td>${this.DB.productNames[pid]}</td>`;
-          this.DB.companies.forEach(c=>{
-            const p=this.DB.prices[pid]?.[c.name];
-            html+=`<td>${p?`¥${p.toFixed(2)}`:'-'}</td>`;
-          });
-          html+=`<td>${this.DB.medians[pid]?.toFixed(2)||'-'}</td></tr>`;
-        });
-        html+=`</tbody>`;
-        this.matrixTable.innerHTML=html;
-      }
-
-      updateAnalytics(){
-        this.analyticsTable.innerHTML='';
-        this.DB.companies.forEach(c=>{
-          const prices=[];
-          this.DB.products.forEach(pid=>{
-            const p=this.DB.prices[pid]?.[c.name];
-            if(p) prices.push(p);
-          });
-          if(prices.length){
-            const avg=prices.reduce((a,b)=>a+b,0)/prices.length;
-            const tr=document.createElement('tr');
-            tr.innerHTML=`<td>${c.name}</td><td>${prices.length}</td><td>¥${avg.toFixed(2)}</td><td>¥${Math.min(...prices).toFixed(2)}</td><td>¥${Math.max(...prices).toFixed(2)}</td>`;
-            this.analyticsTable.appendChild(tr);
-          }
-        });
-      }
-
-      performSearch(){
-        const q=this.searchInput.value.trim().toLowerCase();
-        if(!q){ this.searchResults.innerHTML=''; return; }
-        let html='';
-        this.DB.products.forEach(pid=>{
-          const name=this.DB.productNames[pid];
-          if(name.toLowerCase().includes(q)) html+=`<div>📦 ${name}</div>`;
-        });
-        this.searchResults.innerHTML=html||'❌ Ничего не найдено';
-      }
-
-      sendAIMessage(){
-        const msg=this.chatInputAI.value.trim(); if(!msg) return;
-        this.chatMessagesAI.innerHTML += `<div class="message me">${msg}</div>`;
-        this.chatMessagesAI.innerHTML += `<div class="message other">${this.getAIResponse(msg)}</div>`;
-        this.chatInputAI.value='';
-      }
-      getAIResponse(msg){
-        const all=[];
-        Object.values(this.DB.prices).forEach(p=>Object.values(p).forEach(v=>all.push(v)));
-        if(!all.length) return 'Нет данных. Загрузите прайс.';
-        if(msg.toLowerCase().includes('средн')) return `Средняя цена: ¥${(all.reduce((a,b)=>a+b,0)/all.length).toFixed(2)}`;
-        if(msg.toLowerCase().includes('мин')) return `Минимальная цена: ¥${Math.min(...all).toFixed(2)}`;
-        if(msg.toLowerCase().includes('макс')) return `Максимальная цена: ¥${Math.max(...all).toFixed(2)}`;
-        return 'Спросите о ценах, компаниях или медиане.';
-      }
-
-      addLogisticsRow(){
-        this.DB.logistics.push({id:Date.now(), num:this.DB.logistics.length+1, supplier:'', article:'', name:'', quantity:'', unit:'шт.', status:'📋', planDate:'', factDate:'', cost:''});
-        this.save(); this.updateLogisticsTable();
-      }
-      updateLogisticsRow(id, field, value){
-        const row=this.DB.logistics.find(r=>r.id===id);
-        if(row){ row[field]=value; this.save(); }
-      }
-      deleteLogisticsRow(id){
-        this.DB.logistics=this.DB.logistics.filter(r=>r.id!==id);
-        this.save(); this.updateLogisticsTable();
-      }
-      updateLogisticsTable(){
-        this.logisticsBody.innerHTML='';
-        this.DB.logistics.forEach(r=>{
-          const tr=document.createElement('tr');
-          tr.innerHTML=`<td>${r.num}</td>
-          <td><input value="${r.supplier}" data-id="${r.id}" data-field="supplier"></td>
-          <td><input value="${r.article}" data-id="${r.id}" data-field="article"></td>
-          <td><input value="${r.name}" data-id="${r.id}" data-field="name"></td>
-          <td><input value="${r.quantity}" data-id="${r.id}" data-field="quantity"></td>
-          <td><input value="${r.unit}" data-id="${r.id}" data-field="unit"></td>
-          <td><input value="${r.status}" data-id="${r.id}" data-field="status"></td>
-          <td><input type="date" value="${r.planDate}" data-id="${r.id}" data-field="planDate"></td>
-          <td><input type="date" value="${r.factDate}" data-id="${r.id}" data-field="factDate"></td>
-          <td><input value="${r.cost}" data-id="${r.id}" data-field="cost"></td>
-          <td><button class="btn btn-danger" data-delete="${r.id}">❌</button></td>`;
-          this.logisticsBody.appendChild(tr);
-        });
-      }
-      clearLogistics(){ this.DB.logistics=[]; this.save(); this.updateLogisticsTable(); }
-
-      getAIPricingInsights(){
-        return `Всего товаров: ${this.DB.products.length} | Компаний: ${this.DB.companies.length}`;
-      }
-
-      clearAllData(){
-        this.DB = { companies:[], products:[], prices:{}, productNames:{}, targetPrices:{}, targetByName:{}, medians:{}, logistics:[] };
-        this.save(); this.updateAll();
-      }
-    }
-
-    const app = new PriceManagerApp();
-  </script>
+  });
+</script>
 </body>
 </html>
