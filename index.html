@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Price Manager Pro + SENDER</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     :root{
       --primary:#2f5cff; --secondary:#0f172a; --accent:#22c55e; --accent-pink:#ec4899;
@@ -20,6 +21,10 @@
       --shadow-soft:8px 8px 18px rgba(0,0,0,0.08),-6px -6px 14px rgba(255,255,255,0.7);
       --shadow-inset:inset 6px 6px 12px rgba(0,0,0,0.08),inset -6px -6px 12px rgba(255,255,255,0.9);}
     body.theme-graphite{--bg:#111827;--surface:#1f2937;--surface-2:#111827;}
+
+    .ph{font-size:16px;vertical-align:middle;margin-right:8px;}
+    .menu-item .ph{font-size:17px;}
+    .btn .ph{margin-right:6px;}
 
     .login-page{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,var(--primary),var(--accent-pink));}
     .login-box{background:var(--surface);padding:36px;border-radius:var(--radius);box-shadow:var(--shadow-soft);width:100%;max-width:420px;}
@@ -100,21 +105,22 @@
   </style>
 </head>
 <body class="theme-ocean">
-
 <div id="loginPage" class="login-page">
   <div class="login-box">
-    <h1>💎 Price Manager Pro</h1>
+    <h1>Price Manager Pro</h1>
     <label>Email</label>
     <input id="loginEmail" type="email" value="admin@example.com"/>
     <label style="margin-top:8px;">Пароль</label>
     <input id="loginPassword" type="password" value="admin123"/>
-    <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:14px;">Вход</button>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:14px;">
+      <i class="ph ph-sign-in"></i> Вход
+    </button>
   </div>
 </div>
 
 <div id="mainApp" class="app">
   <div class="header">
-    <div class="logo">⚙️ Price Manager Pro</div>
+    <div class="logo">Price Manager Pro</div>
     <div class="header-right">
       <select id="themeSelect">
         <option value="theme-ocean">Океан</option>
@@ -122,31 +128,30 @@
         <option value="theme-graphite">Графит</option>
       </select>
       <div id="userName">Администратор</div>
-      <button class="btn btn-danger" id="logoutBtn">Выход</button>
+      <button class="btn btn-danger" id="logoutBtn"><i class="ph ph-sign-out"></i> Выход</button>
     </div>
   </div>
 
   <div class="content-wrapper">
     <div class="sidebar">
       <div class="menu-group">Цены</div>
-      <div class="menu-item active" data-section="dashboard">📊 Дашборд</div>
-      <div class="menu-item" data-section="search">🔍 Поиск</div>
-      <div class="menu-item" data-section="compare">⚖️ Сравнение</div>
-      <div class="menu-item" data-section="matrix">📋 Матрица</div>
-      <div class="menu-item" data-section="analytics">📈 Аналитика</div>
+      <div class="menu-item active" data-section="dashboard"><i class="ph ph-chart-line-up"></i> Дашборд</div>
+      <div class="menu-item" data-section="search"><i class="ph ph-magnifying-glass"></i> Поиск</div>
+      <div class="menu-item" data-section="compare"><i class="ph ph-scales"></i> Сравнение</div>
+      <div class="menu-item" data-section="matrix"><i class="ph ph-table"></i> Матрица</div>
+      <div class="menu-item" data-section="analytics"><i class="ph ph-graph"></i> Аналитика</div>
 
       <div class="menu-group">Операции</div>
-      <div class="menu-item" data-section="logistics">🚚 Логистика</div>
-      <div class="menu-item" data-section="upload">📤 Загрузка</div>
-      <div class="menu-item" data-section="assistant">🤖 AI</div>
-      <div class="menu-item" data-section="insights">💡 Insights</div>
+      <div class="menu-item" data-section="logistics"><i class="ph ph-truck"></i> Логистика</div>
+      <div class="menu-item" data-section="upload"><i class="ph ph-upload"></i> Загрузка</div>
+      <div class="menu-item" data-section="assistant"><i class="ph ph-robot"></i> AI</div>
+      <div class="menu-item" data-section="insights"><i class="ph ph-lightbulb"></i> Insights</div>
 
       <div class="menu-group">Коммуникации</div>
-      <div class="menu-item" data-section="messenger">💬 SENDER</div>
+      <div class="menu-item" data-section="messenger"><i class="ph ph-chat-circle-text"></i> SENDER</div>
     </div>
 
     <div class="content">
-      <!-- DASHBOARD -->
       <section id="dashboard" class="section active">
         <div class="kpi-grid">
           <div class="kpi accent"><div class="kpi-label">Всего продуктов</div><div class="kpi-value" id="kpiProducts">0</div></div>
@@ -155,15 +160,15 @@
           <div class="kpi"><div class="kpi-label">Лучшая компания</div><div class="kpi-value" id="kpiBest">—</div></div>
         </div>
         <div class="card">
-          <div class="card-title">⚡ Быстрые действия</div>
+          <div class="card-title"><i class="ph ph-bolt"></i> Быстрые действия</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-primary" onclick="document.getElementById('excelFile').click()">📥 Загрузить прайс</button>
-            <button class="btn btn-primary" onclick="document.querySelector('[data-section=logistics]').click()">🚚 Логистика</button>
-            <button class="btn btn-primary" onclick="document.querySelector('[data-section=messenger]').click()">💬 Чат логистики</button>
+            <button class="btn btn-primary" onclick="document.getElementById('excelFile').click()"><i class="ph ph-upload"></i> Загрузить прайс</button>
+            <button class="btn btn-primary" onclick="document.querySelector('[data-section=logistics]').click()"><i class="ph ph-truck"></i> Логистика</button>
+            <button class="btn btn-primary" onclick="document.querySelector('[data-section=messenger]').click()"><i class="ph ph-chat-circle-text"></i> Чат логистики</button>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">⭐ Лучшие цены (Top 10)</div>
+          <div class="card-title"><i class="ph ph-star"></i> Лучшие цены (Top 10)</div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Product</th><th>Компания</th><th>Цена</th><th>Медиана</th><th>Target</th><th>Статус</th></tr></thead>
@@ -175,7 +180,7 @@
 
       <section id="search" class="section">
         <div class="card">
-          <div class="card-title">🔍 Поиск</div>
+          <div class="card-title"><i class="ph ph-magnifying-glass"></i> Поиск</div>
           <input id="searchInput" placeholder="Название продукта или компании"/>
           <div id="searchResults" style="margin-top:16px;"></div>
         </div>
@@ -183,7 +188,7 @@
 
       <section id="compare" class="section">
         <div class="card">
-          <div class="card-title">⚖️ Сравнение</div>
+          <div class="card-title"><i class="ph ph-scales"></i> Сравнение</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <select id="company1"></select>
             <select id="company2"></select>
@@ -194,14 +199,14 @@
 
       <section id="matrix" class="section">
         <div class="card">
-          <div class="card-title">📋 Матрица</div>
+          <div class="card-title"><i class="ph ph-table"></i> Матрица</div>
           <div class="table-wrap"><table id="matrixTable"></table></div>
         </div>
       </section>
 
       <section id="analytics" class="section">
         <div class="card">
-          <div class="card-title">📈 Аналитика</div>
+          <div class="card-title"><i class="ph ph-graph"></i> Аналитика</div>
           <div class="filters"><input id="analyticsFilter" placeholder="Фильтр по компании..."></div>
           <div class="table-wrap">
             <table>
@@ -214,21 +219,21 @@
 
       <section id="assistant" class="section">
         <div class="card">
-          <div class="card-title">🤖 AI помощник</div>
+          <div class="card-title"><i class="ph ph-robot"></i> AI помощник</div>
           <div id="chatMessagesAI" style="height:260px;overflow:auto;margin-bottom:10px;"></div>
           <div style="display:flex;gap:8px;">
             <textarea id="chatInputAI" placeholder="Спросите о ценах..." style="height:40px;"></textarea>
-            <button class="btn btn-primary" id="chatSendBtnAI">📤</button>
+            <button class="btn btn-primary" id="chatSendBtnAI"><i class="ph ph-paper-plane-right"></i> Отправить</button>
           </div>
         </div>
       </section>
 
       <section id="logistics" class="section">
         <div class="card">
-          <div class="card-title">🚚 Логистика</div>
+          <div class="card-title"><i class="ph ph-truck"></i> Логистика</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-primary" id="addLogisticsBtn">➕ Добавить</button>
-            <button class="btn btn-danger" id="clearLogisticsBtn">🗑 Очистить</button>
+            <button class="btn btn-primary" id="addLogisticsBtn"><i class="ph ph-plus"></i> Добавить</button>
+            <button class="btn btn-danger" id="clearLogisticsBtn"><i class="ph ph-trash"></i> Очистить</button>
           </div>
           <div class="table-wrap" style="margin-top:12px;">
             <table>
@@ -240,25 +245,25 @@
       </section>
 
       <section id="upload" class="section">
-        <div class="card"><div class="card-title">📥 Загрузка прайса (цены)</div><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/></div>
-        <div class="card"><div class="card-title">🎯 Target Price</div><input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/></div>
-        <div class="card"><div class="card-title">🚚 Загрузка логистики</div><input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/></div>
-        <div class="card"><button class="btn btn-danger" id="clearAllBtn">🗑 Очистить все</button></div>
+        <div class="card"><div class="card-title"><i class="ph ph-upload"></i> Загрузка прайса</div><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card"><div class="card-title"><i class="ph ph-target"></i> Target Price</div><input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card"><div class="card-title"><i class="ph ph-truck"></i> Загрузка логистики</div><input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/></div>
+        <div class="card"><button class="btn btn-danger" id="clearAllBtn"><i class="ph ph-trash"></i> Очистить все</button></div>
       </section>
 
       <section id="insights" class="section">
         <div class="card">
-          <div class="card-title">💡 AI Insights</div>
+          <div class="card-title"><i class="ph ph-lightbulb"></i> AI Insights</div>
           <div id="aiInsightsContainer"></div>
         </div>
       </section>
 
       <section id="messenger" class="section">
         <div class="card">
-          <div class="card-title">💬 SENDER — единый центр коммуникаций</div>
+          <div class="card-title"><i class="ph ph-chat-circle-text"></i> SENDER — единый центр коммуникаций</div>
           <div class="chat-shell">
             <aside class="chat-sidebar">
-              <div class="head"><strong>Чаты</strong><button class="btn btn-primary" id="addChatBtn">+</button></div>
+              <div class="head"><strong>Чаты</strong><button class="btn btn-primary" id="addChatBtn"><i class="ph ph-plus"></i></button></div>
               <div class="chat-list" id="chatList"></div>
             </aside>
             <section class="chat-main">
@@ -270,14 +275,14 @@
               <div class="chat-input-area">
                 <div style="position:relative;">
                   <div class="emoji-picker" id="emojiPicker"></div>
-                  <button class="btn btn-ghost" id="emojiToggle">😀</button>
+                  <button class="btn btn-ghost" id="emojiToggle"><i class="ph ph-smiley"></i></button>
                 </div>
                 <textarea id="messageInput" placeholder="Напишите сообщение..."></textarea>
                 <div>
-                  <label class="file-label">📎<input type="file" id="fileInput" style="display:none"/></label>
+                  <label class="file-label"><i class="ph ph-paperclip"></i><input type="file" id="fileInput" style="display:none"/></label>
                   <div id="fileName" class="file-name"></div>
                 </div>
-                <button class="btn btn-primary" id="sendBtn">➤</button>
+                <button class="btn btn-primary" id="sendBtn"><i class="ph ph-paper-plane-right"></i></button>
               </div>
             </section>
           </div>
@@ -289,7 +294,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  /* === Storage + Theme === */
   class StorageService {
     static get(key, fallback = null){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
     static set(key, value){try{localStorage.setItem(key, JSON.stringify(value))}catch{}}
@@ -304,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* === Messenger === */
   class MessengerApp {
     constructor(){
       this.storageKey='senderData';
@@ -420,7 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* === Main App === */
   class PriceManagerApp {
     constructor(){
       this.DB = StorageService.get('priceManagerDB', {companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]});
@@ -755,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><input type="date" value="${r.planDate}" data-id="${r.id}" data-field="planDate"></td>
           <td><input type="date" value="${r.factDate}" data-id="${r.id}" data-field="factDate"></td>
           <td><input value="${r.cost}" data-id="${r.id}" data-field="cost"></td>
-          <td><button class="btn btn-danger" data-delete="${r.id}">❌</button></td>`;
+          <td><button class="btn btn-danger" data-delete="${r.id}"><i class="ph ph-x"></i></button></td>`;
         this.logisticsBody.appendChild(tr);
       });
     }
