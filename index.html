@@ -48,6 +48,9 @@
 
     .content-wrapper{display:flex;flex:1;overflow:hidden;}
     .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:12px 0;box-shadow:var(--shadow-soft);}
+    #resizeHandle{width:6px;cursor:col-resize;background:rgba(255,255,255,0.05);}
+    #resizeHandle:hover{background:rgba(47,92,255,0.4);}
+
     .menu-group{padding:10px 16px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;}
     .menu-item{padding:10px 18px;cursor:pointer;color:var(--muted);border-left:3px solid transparent;transition:var(--transition);}
     .menu-item:hover{color:var(--primary);background:rgba(47,92,255,.08);}
@@ -83,29 +86,11 @@
     }
     .suggest-item{padding:8px 10px;cursor:pointer;font-size:13px;}
     .suggest-item:hover{background:rgba(47,92,255,.12);}
-
-    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
-    .tab{padding:6px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;color:var(--muted);}
-    .tab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
-
-    .months{display:grid;grid-template-columns:repeat(12,1fr);font-size:11px;color:var(--muted);margin-bottom:6px;}
-    .month-cell{border-right:1px dashed var(--border);padding:2px 4px;text-align:center;}
-    .gantt-row{display:grid;grid-template-columns:260px 1fr;gap:12px;margin-bottom:10px;}
-    .gantt-task{padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);}
-    .gantt-timeline{position:relative;height:40px;border-radius:10px;background:var(--surface);border:1px solid var(--border);}
-    .gantt-bar{position:absolute;height:22px;border-radius:8px;top:8px;box-shadow:var(--shadow-soft);cursor:grab;}
-    .gantt-bar:active{cursor:grabbing;}
-
-    .chart-box{height:240px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);padding:10px;}
-    canvas{width:100%;height:100%;}
-
-    .badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;}
-    .badge.green{background:#16a34a;color:#fff;}
-    .badge.red{background:#dc2626;color:#fff;}
-    .badge.gray{background:#475569;color:#fff;}
   </style>
 </head>
 <body class="theme-ocean">
+
+<!-- LOGIN -->
 <div id="loginPage" class="login-page">
   <div class="login-box">
     <h1>Price Manager Pro</h1>
@@ -116,12 +101,10 @@
     <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:14px;">
       <i class="ph ph-sign-in"></i> Вход
     </button>
-    <div style="font-size:12px;color:var(--muted);margin-top:10px;">
-      admin / finance / logistics / sales
-    </div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="mainApp" class="app">
   <div class="header">
     <div class="logo">Price Manager Pro</div>
@@ -132,7 +115,6 @@
         <option value="theme-graphite">Графит</option>
       </select>
       <div id="userName">Администратор</div>
-      <div id="userRole" style="color:var(--muted);font-size:12px;"></div>
       <button class="btn btn-danger" id="logoutBtn"><i class="ph ph-sign-out"></i> Выход</button>
     </div>
   </div>
@@ -146,22 +128,12 @@
       <div class="menu-item" data-section="matrix"><i class="ph ph-table"></i> Матрица</div>
       <div class="menu-item" data-section="analytics"><i class="ph ph-graph"></i> Аналитика</div>
 
-      <div class="menu-group">Контроль</div>
-      <div class="menu-item" data-section="suppliers"><i class="ph ph-factory"></i> Рейтинг поставщиков</div>
-      <div class="menu-item" data-section="approvals"><i class="ph ph-check-circle"></i> Согласования</div>
-      <div class="menu-item" data-section="alerts"><i class="ph ph-warning-circle"></i> Алерты</div>
-      <div class="menu-item" data-section="kpi"><i class="ph ph-chart-bar"></i> KPI‑графики</div>
-
       <div class="menu-group">Операции</div>
       <div class="menu-item" data-section="logistics"><i class="ph ph-truck"></i> Логистика</div>
-      <div class="menu-item" data-section="gantt"><i class="ph ph-chart-bar"></i> Gantt</div>
       <div class="menu-item" data-section="upload"><i class="ph ph-upload"></i> Загрузка</div>
-
-      <div class="menu-group">Коммуникации</div>
-      <div class="menu-item" data-section="assistant"><i class="ph ph-robot"></i> AI</div>
-      <div class="menu-item" data-section="insights"><i class="ph ph-lightbulb"></i> Insights</div>
-      <div class="menu-item" data-section="messenger"><i class="ph ph-chat-circle-text"></i> SENDER</div>
     </div>
+
+    <div id="resizeHandle"></div>
 
     <div class="content">
       <!-- DASHBOARD -->
@@ -174,12 +146,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title"><i class="ph ph-warning-circle"></i> Алерты (сводка)</div>
-          <div id="alertsSummary"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title"><i class="ph ph-star"></i> Лучшие цены по продуктам (Top 10)</div>
+          <div class="card-title"><i class="ph ph-star"></i> Лучшие цены (Top 10)</div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Product</th><th>Компания</th><th>Цена</th><th>Медиана</th><th>Target</th><th>Статус</th></tr></thead>
@@ -201,6 +168,26 @@
         </div>
       </section>
 
+      <!-- COMPARE -->
+      <section id="compare" class="section">
+        <div class="card">
+          <div class="card-title"><i class="ph ph-scales"></i> Сравнение</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <select id="company1"></select>
+            <select id="company2"></select>
+          </div>
+          <div id="comparisonResult" style="margin-top:16px;"></div>
+        </div>
+      </section>
+
+      <!-- MATRIX -->
+      <section id="matrix" class="section">
+        <div class="card">
+          <div class="card-title"><i class="ph ph-table"></i> Матрица</div>
+          <div class="table-wrap"><table id="matrixTable"></table></div>
+        </div>
+      </section>
+
       <!-- ANALYTICS -->
       <section id="analytics" class="section">
         <div class="card">
@@ -215,65 +202,14 @@
         </div>
       </section>
 
-      <!-- SUPPLIERS -->
-      <section id="suppliers" class="section">
-        <div class="card">
-          <div class="card-title"><i class="ph ph-factory"></i> Рейтинг поставщиков</div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Компания</th><th>Цена‑скор</th><th>Логистика‑скор</th><th>Стабильность</th><th>Итог</th></tr></thead>
-              <tbody id="suppliersTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- APPROVALS -->
-      <section id="approvals" class="section">
-        <div class="card">
-          <div class="card-title"><i class="ph ph-check-circle"></i> Согласование цен</div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Продукт</th><th>Компания</th><th>Цена</th><th>Target</th><th>Статус</th><th>Действие</th></tr></thead>
-              <tbody id="approvalsTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ALERTS -->
-      <section id="alerts" class="section">
-        <div class="card">
-          <div class="card-title"><i class="ph ph-warning-circle"></i> Алерты</div>
-          <div id="alertsList"></div>
-        </div>
-      </section>
-
-      <!-- KPI -->
-      <section id="kpi" class="section">
-        <div class="card">
-          <div class="card-title"><i class="ph ph-chart-bar"></i> KPI‑графики (динамика медианы)</div>
-          <select id="kpiProduct"></select>
-          <div class="chart-box"><canvas id="kpiCanvas" width="800" height="240"></canvas></div>
-        </div>
-      </section>
-
       <!-- LOGISTICS -->
       <section id="logistics" class="section">
-        <div class="card">
-          <div class="card-title"><i class="ph ph-truck"></i> SLA логистики</div>
-          <div id="slaMetrics"></div>
-        </div>
         <div class="card">
           <div class="card-title"><i class="ph ph-truck"></i> Логистика</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-primary" id="addLogisticsBtn"><i class="ph ph-plus"></i> Добавить</button>
             <button class="btn btn-danger" id="clearLogisticsBtn"><i class="ph ph-trash"></i> Очистить</button>
           </div>
-          <div class="filters" style="margin-top:12px;">
-            <select id="logisticsYear"></select>
-          </div>
-          <div id="logisticsTabs" class="tabs"></div>
           <div class="table-wrap" style="margin-top:12px;">
             <table>
               <thead><tr><th>№</th><th>Поставщик</th><th>Артикул</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Статус</th><th>План</th><th>Факт</th><th>Стоимость</th><th></th></tr></thead>
@@ -289,49 +225,12 @@
           <div class="card-title"><i class="ph ph-upload"></i> Загрузка прайса</div>
           <input type="file" id="excelFile" accept=".xlsx,.xls,.csv"/>
           <label style="display:block;margin-top:10px;">
-            <input type="checkbox" id="tcaOnly" checked> Загружать только TCA (если в файле есть другие продукты)
+            <input type="checkbox" id="tcaOnly"> Загружать только TCA (если в файле есть другие продукты)
           </label>
-        </div>
-        <div class="card"><div class="card-title"><i class="ph ph-target"></i> Target Price</div><input type="file" id="targetPriceFile" accept=".xlsx,.xls,.csv"/></div>
-        <div class="card"><div class="card-title"><i class="ph ph-truck"></i> Загрузка логистики</div><input type="file" id="logisticsFile" accept=".xlsx,.xls,.csv"/></div>
-        <div class="card">
-          <div class="card-title"><i class="ph ph-download"></i> Экспорт</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-primary" id="exportPrices"><i class="ph ph-file-xls"></i> Цены</button>
-            <button class="btn btn-primary" id="exportLogistics"><i class="ph ph-file-xls"></i> Логистика</button>
-            <button class="btn btn-primary" id="exportGantt"><i class="ph ph-file-xls"></i> Gantt</button>
-          </div>
         </div>
         <div class="card"><button class="btn btn-danger" id="clearAllBtn"><i class="ph ph-trash"></i> Очистить все</button></div>
       </section>
 
-      <!-- GANTT -->
-      <section id="gantt" class="section">
-        <div class="card">
-          <div class="card-title"><i class="ph ph-chart-bar"></i> Gantt Chart (проекты)</div>
-          <div class="filters">
-            <select id="ganttProjectSelect"></select>
-            <select id="ganttYearSelect"></select>
-            <button class="btn btn-primary" id="ganttAddProject"><i class="ph ph-plus"></i> Проект</button>
-          </div>
-          <div class="card" style="margin-top:12px;">
-            <div class="card-title">➕ Добавить задачу</div>
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
-              <input id="ganttTaskName" placeholder="Задача"/>
-              <input id="ganttTaskStart" type="date"/>
-              <input id="ganttTaskEnd" type="date"/>
-              <input id="ganttTaskColor" type="color" value="#2f5cff"/>
-              <button class="btn btn-primary" id="ganttAddTask"><i class="ph ph-plus"></i> Добавить</button>
-            </div>
-          </div>
-          <div id="ganttContainer" style="margin-top:12px;"></div>
-        </div>
-      </section>
-
-      <!-- AI / INSIGHTS / MESSENGER -->
-      <section id="assistant" class="section"><div class="card"><div class="card-title"><i class="ph ph-robot"></i> AI</div><div id="chatMessagesAI" style="height:260px;overflow:auto;margin-bottom:10px;"></div><div style="display:flex;gap:8px;"><textarea id="chatInputAI" placeholder="Спросите о ценах..." style="height:40px;"></textarea><button class="btn btn-primary" id="chatSendBtnAI"><i class="ph ph-paper-plane-right"></i> Отправить</button></div></div></section>
-      <section id="insights" class="section"><div class="card"><div class="card-title"><i class="ph ph-lightbulb"></i> Insights</div><div id="aiInsightsContainer"></div></div></section>
-      <section id="messenger" class="section"><div class="card"><div class="card-title"><i class="ph ph-chat-circle-text"></i> SENDER</div><div class="chat-shell"><aside class="chat-sidebar"><div class="head"><strong>Чаты</strong><button class="btn btn-primary" id="addChatBtn"><i class="ph ph-plus"></i></button></div><div class="chat-list" id="chatList"></div></aside><section class="chat-main"><div class="chat-header"><div><div id="chatTitle">Чат</div><div id="chatMembers" style="font-size:12px;color:var(--muted);"></div></div><div style="font-size:12px;color:var(--muted);">Демо-режим</div></div><div class="chat-messages" id="chatMessages"></div><div class="chat-input-area"><div style="position:relative;"><div class="emoji-picker" id="emojiPicker"></div><button class="btn btn-ghost" id="emojiToggle"><i class="ph ph-smiley"></i></button></div><textarea id="messageInput" placeholder="Напишите сообщение..."></textarea><div><label class="file-label"><i class="ph ph-paperclip"></i><input type="file" id="fileInput" style="display:none"/></label><div id="fileName" class="file-name"></div></div><button class="btn btn-primary" id="sendBtn"><i class="ph ph-paper-plane-right"></i></button></div></section></div></div></section>
     </div>
   </div>
 </div>
@@ -339,93 +238,64 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   class StorageService{static get(k,f=null){try{return JSON.parse(localStorage.getItem(k))||f}catch{return f}}static set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}static remove(k){try{localStorage.removeItem(k)}catch{}}}
-  class ThemeManager{constructor(selectEl){const saved=StorageService.get('theme','theme-ocean');document.body.className=saved;selectEl.value=saved;selectEl.addEventListener('change',()=>{document.body.className=selectEl.value;StorageService.set('theme',selectEl.value)})}}
 
-  /* ==== MAIN APP ==== */
   class PriceManagerApp{
     constructor(){
-      this.users={
-        "admin@example.com":{pass:"admin123",role:"admin",name:"Администратор"},
-        "finance@example.com":{pass:"finance123",role:"finance",name:"Финансы"},
-        "logistics@example.com":{pass:"log123",role:"logistics",name:"Логистика"},
-        "sales@example.com":{pass:"sales123",role:"sales",name:"Sales"}
-      };
       this.DB=StorageService.get('priceManagerDB',{companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]});
-      this.snapshots=StorageService.get('priceSnapshots',[]);
-      this.approvals=StorageService.get('approvals',[]);
       this.currentUser=StorageService.get('currentUserPM',null);
-      this.gantt=StorageService.get('ganttData',{projects:['Проект 1'],tasks:[
-        {id:1, project:'Проект 1', name:'Анализ рынка', start:'2025-01-10', end:'2025-02-20', color:'#2f5cff'},
-        {id:2, project:'Проект 1', name:'Закупка', start:'2025-03-01', end:'2025-04-15', color:'#22c55e'}
-      ]});
-      this.ganttDrag=null; this.activeMonth='';
       this.init();
     }
-
-    init(){
-      this.cache(); this.bind();
-      this.currentUser?this.showMain():this.showLogin();
-      new ThemeManager(this.themeSelect);
-      this.updateAll(); this.initGantt(); this.initLogisticsFilters(); this.applyRoleUI();
-    }
+    init(){this.cache();this.bind();this.currentUser?this.showMain():this.showLogin();this.updateAll();}
 
     cache(){
-      this.loginPage=document.getElementById('loginPage'); this.mainApp=document.getElementById('mainApp');
-      this.loginBtn=document.getElementById('loginBtn'); this.logoutBtn=document.getElementById('logoutBtn');
-      this.loginEmail=document.getElementById('loginEmail'); this.loginPassword=document.getElementById('loginPassword');
-      this.userName=document.getElementById('userName'); this.userRole=document.getElementById('userRole');
-      this.themeSelect=document.getElementById('themeSelect');
-      this.excelFile=document.getElementById('excelFile'); this.targetPriceFile=document.getElementById('targetPriceFile');
-      this.logisticsFile=document.getElementById('logisticsFile'); this.clearAllBtn=document.getElementById('clearAllBtn');
-      this.tcaOnly=document.getElementById('tcaOnly');
-      this.searchInput=document.getElementById('searchInput'); this.searchResults=document.getElementById('searchResults'); this.searchSuggest=document.getElementById('searchSuggest');
-      this.company1=document.getElementById('company1'); this.company2=document.getElementById('company2');
-      this.addLogisticsBtn=document.getElementById('addLogisticsBtn'); this.clearLogisticsBtn=document.getElementById('clearLogisticsBtn');
-      this.logisticsBody=document.getElementById('logisticsBody'); this.logisticsYear=document.getElementById('logisticsYear'); this.logisticsTabs=document.getElementById('logisticsTabs');
-      this.topPricesList=document.getElementById('topPricesList'); this.analyticsTable=document.getElementById('analyticsTable'); this.matrixTable=document.getElementById('matrixTable');
-      this.kpiProducts=document.getElementById('kpiProducts'); this.kpiCompanies=document.getElementById('kpiCompanies'); this.kpiAvg=document.getElementById('kpiAvg'); this.kpiBest=document.getElementById('kpiBest');
-      this.alertsSummary=document.getElementById('alertsSummary'); this.alertsList=document.getElementById('alertsList');
-      this.suppliersTable=document.getElementById('suppliersTable'); this.approvalsTable=document.getElementById('approvalsTable');
-      this.kpiProduct=document.getElementById('kpiProduct'); this.kpiCanvas=document.getElementById('kpiCanvas');
-      this.slaMetrics=document.getElementById('slaMetrics');
-      this.exportPrices=document.getElementById('exportPrices'); this.exportLogistics=document.getElementById('exportLogistics'); this.exportGantt=document.getElementById('exportGantt');
+      this.loginPage=document.getElementById('loginPage');
+      this.mainApp=document.getElementById('mainApp');
+      this.loginBtn=document.getElementById('loginBtn');
+      this.logoutBtn=document.getElementById('logoutBtn');
+      this.loginEmail=document.getElementById('loginEmail');
+      this.loginPassword=document.getElementById('loginPassword');
+      this.userName=document.getElementById('userName');
 
-      this.ganttProjectSelect=document.getElementById('ganttProjectSelect'); this.ganttYearSelect=document.getElementById('ganttYearSelect');
-      this.ganttAddProject=document.getElementById('ganttAddProject'); this.ganttAddTask=document.getElementById('ganttAddTask');
-      this.ganttTaskName=document.getElementById('ganttTaskName'); this.ganttTaskStart=document.getElementById('ganttTaskStart');
-      this.ganttTaskEnd=document.getElementById('ganttTaskEnd'); this.ganttTaskColor=document.getElementById('ganttTaskColor');
-      this.ganttContainer=document.getElementById('ganttContainer');
+      this.excelFile=document.getElementById('excelFile');
+      this.clearAllBtn=document.getElementById('clearAllBtn');
+      this.tcaOnly=document.getElementById('tcaOnly');
+
+      this.searchInput=document.getElementById('searchInput');
+      this.searchResults=document.getElementById('searchResults');
+      this.searchSuggest=document.getElementById('searchSuggest');
+
+      this.company1=document.getElementById('company1');
+      this.company2=document.getElementById('company2');
+      this.comparisonResult=document.getElementById('comparisonResult');
+
+      this.analyticsTable=document.getElementById('analyticsTable');
+      this.analyticsFilter=document.getElementById('analyticsFilter');
+      this.matrixTable=document.getElementById('matrixTable');
+
+      this.addLogisticsBtn=document.getElementById('addLogisticsBtn');
+      this.clearLogisticsBtn=document.getElementById('clearLogisticsBtn');
+      this.logisticsBody=document.getElementById('logisticsBody');
+
+      this.topPricesList=document.getElementById('topPricesList');
+      this.kpiProducts=document.getElementById('kpiProducts');
+      this.kpiCompanies=document.getElementById('kpiCompanies');
+      this.kpiAvg=document.getElementById('kpiAvg');
+      this.kpiBest=document.getElementById('kpiBest');
     }
 
     bind(){
       this.loginBtn.onclick=()=>this.handleLogin();
       this.logoutBtn.onclick=()=>this.handleLogout();
       this.excelFile.onchange=(e)=>this.handlePriceUpload(e);
-      this.targetPriceFile.onchange=(e)=>this.handleTargetUpload(e);
-      this.logisticsFile.onchange=(e)=>this.handleLogisticsUpload(e);
       this.clearAllBtn.onclick=()=>this.clearAllData();
-
       this.searchInput.oninput=()=>{this.performSearch(); this.showSuggestions();}
       this.searchInput.onfocus=()=>this.showSuggestions();
 
-      document.addEventListener('click',(e)=>{if(!e.target.closest('.suggest-box')) this.searchSuggest.style.display='none';});
+      this.company1.onchange=()=>this.updateComparison();
+      this.company2.onchange=()=>this.updateComparison();
 
       this.addLogisticsBtn.onclick=()=>this.addLogisticsRow();
       this.clearLogisticsBtn.onclick=()=>this.clearLogistics();
-      this.logisticsYear.onchange=()=>this.updateLogisticsTable();
-
-      this.exportPrices.onclick=()=>this.exportPricesExcel();
-      this.exportLogistics.onclick=()=>this.exportLogisticsExcel();
-      this.exportGantt.onclick=()=>this.exportGanttExcel();
-
-      document.querySelectorAll('.menu-item').forEach(item=>{
-        item.addEventListener('click',()=>{
-          document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
-          document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-          item.classList.add('active');
-          document.getElementById(item.dataset.section).classList.add('active');
-        });
-      });
 
       this.logisticsBody.addEventListener('input',(e)=>{
         const el=e.target; const id=el.dataset.id; const field=el.dataset.field;
@@ -435,34 +305,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn=e.target.closest('[data-delete]');
         if(btn) this.deleteLogisticsRow(Number(btn.dataset.delete));
       });
-    }
 
-    applyRoleUI(){
-      if(!this.currentUser) return;
-      const role=this.currentUser.role;
-      this.userRole.textContent = role.toUpperCase();
-      const roleMap={
-        admin:["dashboard","search","compare","matrix","analytics","suppliers","approvals","alerts","kpi","logistics","gantt","upload","assistant","insights","messenger"],
-        finance:["dashboard","analytics","suppliers","approvals","alerts","kpi"],
-        logistics:["dashboard","logistics","gantt","alerts","messenger"],
-        sales:["dashboard","search","compare","matrix","analytics","suppliers"]
-      };
-      const allowed = new Set(roleMap[role]||[]);
-      document.querySelectorAll('.menu-item').forEach(i=>{
-        if(!allowed.has(i.dataset.section)) i.style.display='none';
+      document.querySelectorAll('.menu-item').forEach(item=>{
+        item.addEventListener('click',()=>{
+          document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+          document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+          item.classList.add('active');
+          document.getElementById(item.dataset.section).classList.add('active');
+        });
       });
     }
 
     showLogin(){this.loginPage.style.display='flex'; this.mainApp.classList.remove('active');}
-    showMain(){this.loginPage.style.display='none'; this.mainApp.classList.add('active'); if(this.currentUser){this.userName.textContent=this.currentUser.name; this.userRole.textContent=this.currentUser.role.toUpperCase();}}
+    showMain(){this.loginPage.style.display='none'; this.mainApp.classList.add('active');}
 
     handleLogin(){
-      const email=this.loginEmail.value.trim(); const pass=this.loginPassword.value.trim();
-      const user=this.users[email];
-      if(user && user.pass===pass){
-        this.currentUser={email,name:user.name,role:user.role};
+      const email=this.loginEmail.value.trim();
+      const pass=this.loginPassword.value.trim();
+      if(email==='admin@example.com' && pass==='admin123'){
+        this.currentUser={name:'Администратор',email};
         StorageService.set('currentUserPM',this.currentUser);
-        this.showMain(); this.applyRoleUI();
+        this.showMain();
       } else alert('Неверный логин');
     }
     handleLogout(){StorageService.remove('currentUserPM'); this.currentUser=null; this.showLogin();}
@@ -475,18 +338,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const p=parseFloat(s); return isNaN(p)?null:p;
     }
 
-    updateAll(){
-      this.updateDashboard(); this.updateAnalytics(); this.updateSuppliers();
-      this.updateAlerts(); this.updateApprovals(); this.updateKPISelect(); this.drawKPIChart();
-      this.updateLogisticsTable(); this.updateSLA(); this.updateSuggestions();
-    }
-
     handlePriceUpload(e){
       const file=e.target.files[0]; if(!file) return;
       const reader=new FileReader();
       reader.onload=(ev)=>{
         const data=new Uint8Array(ev.target.result);
-        const wb=XLSX.read(data,{type:'array'}); const sheet=wb.Sheets[wb.SheetNames[0]];
+        const wb=XLSX.read(data,{type:'array'});
+        const sheet=wb.Sheets[wb.SheetNames[0]];
         const json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
 
         const headersRaw=json[0].slice(2);
@@ -494,79 +352,58 @@ document.addEventListener('DOMContentLoaded', () => {
         this.DB.companies=headers.map((h,i)=>({id:i+1,name:String(h).trim()}));
 
         this.DB.prices={}; this.DB.products=[]; this.DB.productNames={}; this.DB.medians={};
+
+        const productIndex={};
         for(let i=1;i<json.length;i++){
-          const row=json[i]; if(!row||!row[1]) continue;
+          const row=json[i];
+          if(!row||!row[1]) continue;
+
           const pname=String(row[1]).trim();
           if(!pname || pname.toLowerCase().includes('product name')) continue;
           if(this.tcaOnly.checked && !pname.toLowerCase().includes('tca')) continue;
 
-          const pid=row[0]?.toString().trim()||String(i);
-          this.DB.products.push(pid); this.DB.productNames[pid]=pname; this.DB.prices[pid]={};
+          let pid;
+          if(productIndex[pname]) pid=productIndex[pname];
+          else{
+            pid=row[0]?.toString().trim()||String(i);
+            productIndex[pname]=pid;
+            this.DB.products.push(pid);
+            this.DB.productNames[pid]=pname;
+            this.DB.prices[pid]={};
+          }
+
           const prices=[];
           for(let j=2;j<row.length && (j-2)<headers.length;j++){
-            const company=headers[j-2]; const p=this.parsePrice(row[j]);
+            const company=headers[j-2];
+            const p=this.parsePrice(row[j]);
             if(p){this.DB.prices[pid][company]=p; prices.push(p);}
           }
           if(prices.length){
-            prices.sort((a,b)=>a-b); const mid=Math.floor(prices.length/2);
+            prices.sort((a,b)=>a-b);
+            const mid=Math.floor(prices.length/2);
             this.DB.medians[pid]=prices.length%2?prices[mid]:(prices[mid-1]+prices[mid])/2;
           }
         }
-
-        // Snapshot for KPI
-        this.snapshots.push({date:new Date().toISOString().slice(0,10), medians:this.DB.medians});
-        StorageService.set('priceSnapshots', this.snapshots);
 
         this.save(); this.updateAll(); alert('✅ Прайс загружен');
       };
       reader.readAsArrayBuffer(file);
     }
 
-    handleTargetUpload(e){
-      const file=e.target.files[0]; if(!file) return;
-      const reader=new FileReader();
-      reader.onload=(ev)=>{
-        const data=new Uint8Array(ev.target.result);
-        const wb=XLSX.read(data,{type:'array'}); const sheet=wb.Sheets[wb.SheetNames[0]];
-        const json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
-        this.DB.targetPrices={}; this.DB.targetByName={};
-        for(let i=1;i<json.length;i++){
-          const name=String(json[i][0]||'').trim(); const p=this.parsePrice(json[i][1]);
-          if(name && p){this.DB.targetByName[name]=p;}
-        }
-        this.save(); this.updateAll(); alert('✅ Target Price загружены');
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    handleLogisticsUpload(e){
-      const file=e.target.files[0]; if(!file) return;
-      const reader=new FileReader();
-      reader.onload=(ev)=>{
-        const data=new Uint8Array(ev.target.result);
-        const wb=XLSX.read(data,{type:'array'}); const sheet=wb.Sheets[wb.SheetNames[0]];
-        const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
-        const result=[]; let lastSupplier='', lastNum='';
-        for(let i=2;i<rows.length;i++){
-          const r=rows[i]; if(!r) continue;
-          const num=r[0]||lastNum; const supplier=r[1]||lastSupplier;
-          const article=r[4]; const name=r[5]; if(!article && !name) continue;
-          lastSupplier=supplier||lastSupplier; lastNum=num||lastNum;
-          const qty=r[6], unit=r[7], planDate=r[17]||'', factDate=r[18]||'', cost=r[19]||'';
-          let status='📋 В ожидании'; if(factDate) status='✅ Доставлена'; else if(planDate) status='🚚 В пути';
-          result.push({id:Date.now()+i,num:num||'',supplier:supplier||'',article:article||'',name:name||'',quantity:qty||'',unit:unit||'шт.',status,planDate,factDate,cost});
-        }
-        this.DB.logistics=result; this.save(); this.initLogisticsFilters(); this.updateLogisticsTable(); this.updateSLA(); alert('✅ Логистика загружена');
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
     save(){StorageService.set('priceManagerDB',this.DB);}
+
+    updateAll(){
+      this.updateDashboard();
+      this.initializeSelects();
+      this.updateMatrix();
+      this.updateAnalytics();
+      this.updateLogisticsTable();
+      this.updateSuggestions();
+    }
 
     updateDashboard(){
       this.kpiProducts.textContent=this.DB.products.length;
       this.kpiCompanies.textContent=this.DB.companies.length;
-
       const all=[]; Object.values(this.DB.prices).forEach(p=>Object.values(p).forEach(v=>all.push(v)));
       this.kpiAvg.textContent=all.length?'¥'+(all.reduce((a,b)=>a+b,0)/all.length).toFixed(2):'—';
 
@@ -574,16 +411,55 @@ document.addEventListener('DOMContentLoaded', () => {
       const bestByProduct=[];
       this.DB.products.forEach(pid=>{
         let bestPrice=Infinity, bestCompany='';
-        Object.entries(this.DB.prices[pid]||{}).forEach(([comp,price])=>{if(price<bestPrice){bestPrice=price; bestCompany=comp;}});
-        if(bestPrice<Infinity) bestByProduct.push({pid,company:bestCompany,price:bestPrice,median:this.DB.medians[pid],target:this.DB.targetPrices[pid],name:this.DB.productNames[pid]});
+        Object.entries(this.DB.prices[pid]||{}).forEach(([comp,price])=>{
+          if(price<bestPrice){bestPrice=price; bestCompany=comp;}
+        });
+        if(bestPrice<Infinity) bestByProduct.push({pid,company:bestCompany,price:bestPrice,median:this.DB.medians[pid],name:this.DB.productNames[pid]});
       });
       bestByProduct.sort((a,b)=>a.price-b.price);
       bestByProduct.slice(0,10).forEach(i=>{
-        const status=i.target?(i.price<=i.target?'✅ OK':'❌ High'):'⚪';
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${i.name}</td><td>${i.company}</td><td>¥${i.price.toFixed(2)}</td><td>${i.median?i.median.toFixed(2):'-'}</td><td>${i.target?i.target.toFixed(2):'-'}</td><td>${status}</td>`;
+        tr.innerHTML=`<td>${i.name}</td><td>${i.company}</td><td>¥${i.price.toFixed(2)}</td><td>${i.median?i.median.toFixed(2):'-'}</td><td>-</td><td>-</td>`;
         this.topPricesList.appendChild(tr);
       });
+    }
+
+    initializeSelects(){
+      this.company1.innerHTML='<option>Выберите...</option>';
+      this.company2.innerHTML='<option>Выберите...</option>';
+      this.DB.companies.forEach(c=>{
+        this.company1.appendChild(new Option(c.name,c.name));
+        this.company2.appendChild(new Option(c.name,c.name));
+      });
+    }
+
+    updateComparison(){
+      const c1=this.company1.value,c2=this.company2.value;
+      if(!c1||!c2||c1===c2) return;
+      let html=`<table><tr><th>Продукт</th><th>${c1}</th><th>${c2}</th><th>Разница</th></tr>`;
+      this.DB.products.forEach(pid=>{
+        const p1=this.DB.prices[pid]?.[c1], p2=this.DB.prices[pid]?.[c2];
+        if(p1 && p2) html+=`<tr><td>${this.DB.productNames[pid]}</td><td>¥${p1}</td><td>¥${p2}</td><td>${(p1-p2).toFixed(2)}</td></tr>`;
+      });
+      html+='</table>';
+      this.comparisonResult.innerHTML=html;
+    }
+
+    updateMatrix(){
+      if(!this.DB.products.length) return;
+      let html=`<thead><tr><th>Продукт</th>`;
+      this.DB.companies.forEach(c=>html+=`<th>${c.name}</th>`);
+      html+=`<th>Медиана</th></tr></thead><tbody>`;
+      this.DB.products.forEach(pid=>{
+        html+=`<tr><td>${this.DB.productNames[pid]}</td>`;
+        this.DB.companies.forEach(c=>{
+          const p=this.DB.prices[pid]?.[c.name];
+          html+=`<td>${p?`¥${p.toFixed(2)}`:'-'}</td>`;
+        });
+        html+=`<td>${this.DB.medians[pid]?.toFixed(2)||'-'}</td></tr>`;
+      });
+      html+=`</tbody>`;
+      this.matrixTable.innerHTML=html;
     }
 
     updateAnalytics(){
@@ -600,163 +476,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    updateSuppliers(){
-      this.suppliersTable.innerHTML='';
-      const avgs=this.DB.companies.map(c=>{
-        const prices=[]; this.DB.products.forEach(pid=>{const p=this.DB.prices[pid]?.[c.name]; if(p) prices.push(p);});
-        const avg=prices.length?prices.reduce((a,b)=>a+b,0)/prices.length:0;
-        return {name:c.name,avg, count:prices.length};
-      });
-      const minAvg=Math.min(...avgs.map(a=>a.avg||Infinity));
-      const maxAvg=Math.max(...avgs.map(a=>a.avg||0));
-
-      avgs.forEach(c=>{
-        const priceScore = maxAvg===minAvg?100:Math.round(100-(c.avg-minAvg)/(maxAvg-minAvg)*100);
-        const stability = Math.round((c.count/this.DB.products.length)*100);
-        const logisticsScore = this.getLogisticsScore(c.name);
-        const total = Math.round(priceScore*0.5 + logisticsScore*0.3 + stability*0.2);
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${c.name}</td><td>${priceScore}</td><td>${logisticsScore}</td><td>${stability}</td><td><b>${total}</b></td>`;
-        this.suppliersTable.appendChild(tr);
-      });
-    }
-
-    getLogisticsScore(supplier){
-      const rows=this.DB.logistics.filter(r=>r.supplier.toLowerCase().includes(supplier.toLowerCase()));
-      if(!rows.length) return 50;
-      let ontime=0, total=0;
-      rows.forEach(r=>{
-        if(r.planDate){
-          total++;
-          if(r.factDate && r.factDate<=r.planDate) ontime++;
-        }
-      });
-      return total?Math.round(ontime/total*100):50;
-    }
-
-    updateAlerts(){
-      const alerts=[];
-      // price > target
-      this.DB.products.forEach(pid=>{
-        const target=this.DB.targetByName[this.DB.productNames[pid]];
-        if(!target) return;
-        this.DB.companies.forEach(c=>{
-          const p=this.DB.prices[pid]?.[c.name];
-          if(p && p>target) alerts.push(`Цена выше Target: ${this.DB.productNames[pid]} / ${c.name} (¥${p} > ¥${target})`);
-        });
-      });
-      // overdue logistics
-      const today=new Date().toISOString().slice(0,10);
-      this.DB.logistics.forEach(r=>{
-        if(r.planDate && !r.factDate && r.planDate<today) alerts.push(`Просрочка логистики: ${r.name} (${r.planDate})`);
-      });
-
-      this.alertsSummary.innerHTML = alerts.length?`Всего алертов: <b>${alerts.length}</b>`:'Нет алертов';
-      this.alertsList.innerHTML = alerts.map(a=>`<div>⚠️ ${a}</div>`).join('') || '✅ Все в норме';
-    }
-
-    updateApprovals(){
-      // create approvals for price>target
-      const map=new Map(this.approvals.map(a=>[a.id,a]));
-      const list=[];
-      this.DB.products.forEach(pid=>{
-        const target=this.DB.targetByName[this.DB.productNames[pid]];
-        if(!target) return;
-        this.DB.companies.forEach(c=>{
-          const p=this.DB.prices[pid]?.[c.name];
-          if(p && p>target){
-            const id=`${pid}_${c.name}`;
-            const old=map.get(id);
-            list.push(old || {id,product:this.DB.productNames[pid],company:c.name,price:p,target, status:'pending'});
-          }
-        });
-      });
-      this.approvals=list; StorageService.set('approvals',this.approvals);
-
-      this.approvalsTable.innerHTML='';
-      this.approvals.forEach(a=>{
-        const tr=document.createElement('tr');
-        const badge=a.status==='approved'?'green':(a.status==='rejected'?'red':'gray');
-        tr.innerHTML=`<td>${a.product}</td><td>${a.company}</td><td>¥${a.price}</td><td>¥${a.target}</td><td><span class="badge ${badge}">${a.status}</span></td>
-          <td>
-            <button class="btn btn-primary" data-approve="${a.id}">Approve</button>
-            <button class="btn btn-danger" data-reject="${a.id}">Reject</button>
-          </td>`;
-        this.approvalsTable.appendChild(tr);
-      });
-
-      this.approvalsTable.querySelectorAll('[data-approve]').forEach(btn=>{
-        btn.onclick=()=>this.setApproval(btn.dataset.approve,'approved');
-      });
-      this.approvalsTable.querySelectorAll('[data-reject]').forEach(btn=>{
-        btn.onclick=()=>this.setApproval(btn.dataset.reject,'rejected');
-      });
-    }
-
-    setApproval(id,status){
-      const item=this.approvals.find(a=>a.id===id);
-      if(item){item.status=status; StorageService.set('approvals',this.approvals); this.updateApprovals();}
-    }
-
-    updateKPISelect(){
-      this.kpiProduct.innerHTML='';
-      this.DB.products.forEach(pid=>{
-        this.kpiProduct.innerHTML+=`<option value="${pid}">${this.DB.productNames[pid]}</option>`;
-      });
-      this.kpiProduct.onchange=()=>this.drawKPIChart();
-    }
-
-    drawKPIChart(){
-      const pid=this.kpiProduct.value; if(!pid){return;}
-      const ctx=this.kpiCanvas.getContext('2d');
-      ctx.clearRect(0,0,this.kpiCanvas.width,this.kpiCanvas.height);
-
-      const points=this.snapshots.map(s=>({x:s.date, y:s.medians[pid]||0})).filter(p=>p.y);
-      if(!points.length){ctx.fillText("Нет данных",20,40); return;}
-
-      const max=Math.max(...points.map(p=>p.y));
-      const min=Math.min(...points.map(p=>p.y));
-      const pad=30;
-
-      ctx.strokeStyle="#2f5cff"; ctx.lineWidth=2; ctx.beginPath();
-      points.forEach((p,i)=>{
-        const x=pad + i*( (this.kpiCanvas.width-2*pad)/(points.length-1||1) );
-        const y=this.kpiCanvas.height-pad - ((p.y-min)/(max-min||1))*(this.kpiCanvas.height-2*pad);
-        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-      ctx.fillStyle="#94a3b8"; ctx.fillText(points[0].x,10,this.kpiCanvas.height-5);
-      ctx.fillText(points[points.length-1].x,this.kpiCanvas.width-80,this.kpiCanvas.height-5);
-    }
-
-    updateSLA(){
-      const rows=this.DB.logistics;
-      const total=rows.filter(r=>r.planDate).length;
-      const today=new Date().toISOString().slice(0,10);
-      let ontime=0, late=0, overdue=0, delaySum=0;
-      rows.forEach(r=>{
-        if(r.planDate){
-          if(r.factDate){
-            if(r.factDate<=r.planDate) ontime++;
-            else {late++; delaySum += (new Date(r.factDate)-new Date(r.planDate))/86400000;}
-          } else if(r.planDate<today) overdue++;
-        }
-      });
-      const ontimePct=total?Math.round(ontime/total*100):0;
-      const avgDelay=late?Math.round(delaySum/late):0;
-      this.slaMetrics.innerHTML=`
-        <div>On‑time: <b>${ontimePct}%</b></div>
-        <div>Late: <b>${late}</b></div>
-        <div>Overdue: <b>${overdue}</b></div>
-        <div>Avg delay (days): <b>${avgDelay}</b></div>`;
-    }
-
     updateSuggestions(){
-      const list=[]; this.DB.products.forEach(pid=>list.push(this.DB.productNames[pid]));
-      this.DB.companies.forEach(c=>list.push(c.name));
+      const list=[]; this.DB.products.forEach(pid=>list.push(this.DB.productNames[pid])); this.DB.companies.forEach(c=>list.push(c.name));
       this.suggestData=[...new Set(list)];
     }
-
     showSuggestions(){
       const q=this.searchInput.value.trim().toLowerCase();
       if(!q){this.searchSuggest.style.display='none'; return;}
@@ -794,115 +517,24 @@ document.addEventListener('DOMContentLoaded', () => {
     addLogisticsRow(){this.DB.logistics.push({id:Date.now(),num:this.DB.logistics.length+1,supplier:'',article:'',name:'',quantity:'',unit:'шт.',status:'📋',planDate:'',factDate:'',cost:''});this.save();this.updateLogisticsTable();}
     updateLogisticsRow(id,field,value){const row=this.DB.logistics.find(r=>r.id===id); if(row){row[field]=value; this.save();}}
     deleteLogisticsRow(id){this.DB.logistics=this.DB.logistics.filter(r=>r.id!==id);this.save();this.updateLogisticsTable();}
-    clearLogistics(){this.DB.logistics=[]; this.save(); this.updateLogisticsTable();}
-
-    initLogisticsFilters(){
-      const years=new Set();
-      this.DB.logistics.forEach(r=>{const d=r.planDate||r.factDate; if(d) years.add(d.split('-')[0]);});
-      const yearList=Array.from(years).sort(); const currentYear=new Date().getFullYear().toString();
-      this.logisticsYear.innerHTML=`<option value="">Все годы</option>`+yearList.map(y=>`<option value="${y}">${y}</option>`).join('');
-      if(yearList.includes(currentYear)) this.logisticsYear.value=currentYear;
-
-      const months=['Все','01','02','03','04','05','06','07','08','09','10','11','12'];
-      this.logisticsTabs.innerHTML='';
-      months.forEach((m,i)=>{
-        const tab=document.createElement('div'); tab.className='tab'+(i===0?' active':''); tab.textContent=i===0?'Все':m;
-        tab.onclick=()=>{this.activeMonth=i===0?'':m; this.logisticsTabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); this.updateLogisticsTable();};
-        this.logisticsTabs.appendChild(tab);
-      });
-    }
-
-    updateLogisticsTable(){
-      this.logisticsBody.innerHTML='';
-      const year=this.logisticsYear.value; const month=this.activeMonth;
-      this.DB.logistics.forEach(r=>{
-        const date=r.planDate||r.factDate;
-        if(year && (!date||!date.startsWith(year))) return;
-        if(month && (!date||date.split('-')[1]!==month)) return;
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${r.num}</td><td><input value="${r.supplier}" data-id="${r.id}" data-field="supplier"></td>
-          <td><input value="${r.article}" data-id="${r.id}" data-field="article"></td>
-          <td><input value="${r.name}" data-id="${r.id}" data-field="name"></td>
-          <td><input value="${r.quantity}" data-id="${r.id}" data-field="quantity"></td>
-          <td><input value="${r.unit}" data-id="${r.id}" data-field="unit"></td>
-          <td><input value="${r.status}" data-id="${r.id}" data-field="status"></td>
-          <td><input type="date" value="${r.planDate}" data-id="${r.id}" data-field="planDate"></td>
-          <td><input type="date" value="${r.factDate}" data-id="${r.id}" data-field="factDate"></td>
-          <td><input value="${r.cost}" data-id="${r.id}" data-field="cost"></td>
-          <td><button class="btn btn-danger" data-delete="${r.id}"><i class="ph ph-x"></i></button></td>`;
-        this.logisticsBody.appendChild(tr);
-      });
-    }
-
-    clearAllData(){
-      this.DB={companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]};
-      this.save(); this.updateAll();
-    }
-
-    /* ==== Gantt ==== */
-    initGantt(){
-      const year=new Date().getFullYear(); this.ganttYearSelect.innerHTML='';
-      for(let y=year-1;y<=year+2;y++){this.ganttYearSelect.innerHTML+=`<option value="${y}">${y}</option>`;}
-      this.ganttYearSelect.value=year; this.renderProjectSelect(); this.renderGantt();
-      this.ganttAddProject.onclick=()=>{const name=prompt('Название проекта:'); if(!name) return; this.gantt.projects.push(name); StorageService.set('ganttData',this.gantt); this.renderProjectSelect();};
-      this.ganttAddTask.onclick=()=>{const project=this.ganttProjectSelect.value; const name=this.ganttTaskName.value.trim(); const start=this.ganttTaskStart.value; const end=this.ganttTaskEnd.value; const color=this.ganttTaskColor.value;
-        if(!name||!start||!end) return alert('Заполните все поля');
-        this.gantt.tasks.push({id:Date.now(),project,name,start,end,color}); StorageService.set('ganttData',this.gantt); this.renderGantt();};
-      this.ganttProjectSelect.onchange=()=>this.renderGantt(); this.ganttYearSelect.onchange=()=>this.renderGantt();
-
-      // drag
-      this.ganttContainer.addEventListener('pointerdown',(e)=>{
-        const bar=e.target.closest('.gantt-bar'); if(!bar) return;
-        const id=Number(bar.dataset.id); const rect=bar.parentElement.getBoundingClientRect();
-        this.ganttDrag={id,startX:e.clientX,rectWidth:rect.width}; bar.setPointerCapture(e.pointerId);
-      });
-      this.ganttContainer.addEventListener('pointermove',(e)=>{
-        if(!this.ganttDrag) return; const bar=e.target.closest('.gantt-bar'); if(!bar) return;
-        const delta=e.clientX-this.ganttDrag.startX; bar.style.transform=`translateX(${delta}px)`;
-      });
-      this.ganttContainer.addEventListener('pointerup',(e)=>{
-        if(!this.ganttDrag) return;
-        const delta=e.clientX-this.ganttDrag.startX; const daysInYear=365;
-        const deltaDays=Math.round(delta/this.ganttDrag.rectWidth*daysInYear);
-        const task=this.gantt.tasks.find(t=>t.id===this.ganttDrag.id);
-        if(task){
-          const s=new Date(task.start); const end=new Date(task.end);
-          s.setDate(s.getDate()+deltaDays); end.setDate(end.getDate()+deltaDays);
-          task.start=s.toISOString().slice(0,10); task.end=end.toISOString().slice(0,10);
-          StorageService.set('ganttData',this.gantt); this.renderGantt();
-        }
-        this.ganttDrag=null;
-      });
-    }
-
-    renderProjectSelect(){
-      this.ganttProjectSelect.innerHTML=''; this.gantt.projects.forEach(p=>this.ganttProjectSelect.innerHTML+=`<option value="${p}">${p}</option>`);
-    }
-
-    renderGantt(){
-      const project=this.ganttProjectSelect.value; const year=parseInt(this.ganttYearSelect.value);
-      const tasks=this.gantt.tasks.filter(t=>t.project===project);
-      let html=`<div class="months">`; ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].forEach(m=>html+=`<div class="month-cell">${m}</div>`); html+=`</div>`;
-      tasks.forEach(t=>{
-        const start=new Date(t.start); const end=new Date(t.end);
-        if(start.getFullYear()>year||end.getFullYear()<year) return;
-        const yearStart=new Date(year,0,1); const yearEnd=new Date(year,11,31); const total=yearEnd-yearStart;
-        const left=((start-yearStart)/total)*100; const width=((end-start)/total)*100;
-        html+=`<div class="gantt-row"><div class="gantt-task">${t.name}<br><small>${t.start} → ${t.end}</small></div>
-        <div class="gantt-timeline"><div class="gantt-bar" data-id="${t.id}" style="left:${left}%;width:${width}%;background:${t.color};"></div></div></div>`;
-      });
-      this.ganttContainer.innerHTML=html||'<div>Нет задач</div>';
-    }
-
-    exportPricesExcel(){const rows=this.DB.products.map(pid=>{const row={Product:this.DB.productNames[pid]};this.DB.companies.forEach(c=>{row[c.name]=this.DB.prices[pid]?.[c.name]||'';});return row;});
-      const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Prices'); XLSX.writeFile(wb,'prices.xlsx');}
-    exportLogisticsExcel(){const rows=this.DB.logistics.map(r=>({Num:r.num,Supplier:r.supplier,Article:r.article,Name:r.name,Qty:r.quantity,Unit:r.unit,Status:r.status,Plan:r.planDate,Fact:r.factDate,Cost:r.cost}));
-      const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Logistics'); XLSX.writeFile(wb,'logistics.xlsx');}
-    exportGanttExcel(){const rows=this.gantt.tasks.map(t=>({Project:t.project,Task:t.name,Start:t.start,End:t.end,Color:t.color}));
-      const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Gantt'); XLSX.writeFile(wb,'gantt.xlsx');}
+    updateLogisticsTable(){this.logisticsBody.innerHTML=''; this.DB.logistics.forEach(r=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.num}</td><td><input value="${r.supplier}" data-id="${r.id}" data-field="supplier"></td><td><input value="${r.article}" data-id="${r.id}" data-field="article"></td><td><input value="${r.name}" data-id="${r.id}" data-field="name"></td><td><input value="${r.quantity}" data-id="${r.id}" data-field="quantity"></td><td><input value="${r.unit}" data-id="${r.id}" data-field="unit"></td><td><input value="${r.status}" data-id="${r.id}" data-field="status"></td><td><input type="date" value="${r.planDate}" data-id="${r.id}" data-field="planDate"></td><td><input type="date" value="${r.factDate}" data-id="${r.id}" data-field="factDate"></td><td><input value="${r.cost}" data-id="${r.id}" data-field="cost"></td><td><button class="btn btn-danger" data-delete="${r.id}"><i class="ph ph-x"></i></button></td>`; this.logisticsBody.appendChild(tr);});}
+    clearLogistics(){this.DB.logistics=[];this.save();this.updateLogisticsTable();}
+    clearAllData(){this.DB={companies:[],products:[],prices:{},productNames:{},targetPrices:{},targetByName:{},medians:{},logistics:[]};this.save();this.updateAll();}
   }
 
   new PriceManagerApp();
+
+  // Resizable sidebar
+  const sidebar=document.querySelector('.sidebar');
+  const handle=document.getElementById('resizeHandle');
+  let isResizing=false;
+  handle.addEventListener('mousedown',()=>{isResizing=true;});
+  document.addEventListener('mousemove',(e)=>{
+    if(!isResizing) return;
+    const newWidth=Math.min(420, Math.max(180, e.clientX));
+    sidebar.style.width=newWidth+'px';
+  });
+  document.addEventListener('mouseup',()=>{isResizing=false;});
 });
 </script>
 </body>
